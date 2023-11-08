@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Introduction to bvhar</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to bvhar</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(bvhar)</span></code></pre></div>
+<div id="data" class="section level1">
+<h1>Data</h1>
+<p>Looking at VAR and VHAR, you can learn how the models work and how to
+perform this package.</p>
+<div id="etf-dataset" class="section level2">
+<h2>ETF Dataset</h2>
+<p>This package includes some datasets. Among them, we try CBOE ETF
+volatility index (<code>etf_vix</code>). Since this is just an example,
+we arbitrarily extract a small number of variables: <em>Gold, crude oil,
+euro currency, and china ETF</em>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>var_idx <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;GVZCLS&quot;</span>, <span class="st">&quot;OVXCLS&quot;</span>, <span class="st">&quot;EVZCLS&quot;</span>, <span class="st">&quot;VXFXICLS&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>etf <span class="ot">&lt;-</span> </span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  etf_vix <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(dplyr<span class="sc">::</span><span class="fu">all_of</span>(var_idx))</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>etf</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; # A tibble: 905 × 4</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt;    GVZCLS OVXCLS EVZCLS VXFXICLS</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt;  1   21.5   36.5   13.2     30.2</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt;  2   21.5   35.4   12.6     28.9</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt;  3   22.3   35.5   13.1     29.1</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt;  4   21.6   36.6   12.8     28.5</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt;  5   21.2   35.6   13.3     29.5</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt;  6   21.4   34.8   13.2     29.1</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt;  7   21.6   34.0   13.2     28.7</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt;  8   21.1   32.6   12.8     28.0</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt;  9   20.3   33.5   12.7     28.9</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; 10   19.6   33.4   12.4     28.0</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; # ℹ 895 more rows</span></span></code></pre></div>
+</div>
+<div id="h-step-ahead-forecasting" class="section level2">
+<h2>h-step ahead forecasting</h2>
+<p>For evaluation, split the data. The last <code>19</code> observations
+will be test set. <code>divide_ts()</code> function splits the time
+series into train-test set.</p>
+<p>In the other vignette, we provide how to perform out-of-sample
+forecasting.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="dv">19</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>etf_eval <span class="ot">&lt;-</span> <span class="fu">divide_ts</span>(etf, h) <span class="co"># Try ?divide_ts</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>etf_train <span class="ot">&lt;-</span> etf_eval<span class="sc">$</span>train <span class="co"># train</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>etf_test <span class="ot">&lt;-</span> etf_eval<span class="sc">$</span>test <span class="co"># test</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co"># dimension---------</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">ncol</span>(etf)</span></code></pre></div>
+<ul>
+<li>T: Total number of observation</li>
+<li>p: VAR lag</li>
+<li>m: Dimension of variable</li>
+<li>s = T - p</li>
+<li>k = m * p + 1 if constant term, k = m * p without constant term</li>
+</ul>
+</div>
+</div>
+<div id="models" class="section level1">
+<h1>Models</h1>
+<div id="var" class="section level2">
+<h2>VAR</h2>
+<p>This package indentifies VAR(p) model by</p>
+<p><span class="math display">\[\mathbf{Y}_t = \mathbf{c}+
+\boldsymbol\beta_1 \mathbf{Y}_{t - 1} + \ldots + \boldsymbol\beta_p
++\mathbf{Y}_{t - p} + \boldsymbol\epsilon_t\]</span></p>
+<p>where <span class="math inline">\(\boldsymbol\epsilon_t \sim
+N(\mathbf{0}_k, \Sigma_e)\)</span></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>var_lag <span class="ot">&lt;-</span> <span class="dv">5</span></span></code></pre></div>
+<p>The package perform VAR(p = 5) based on</p>
+<p><span class="math display">\[Y_0 = X_0 A + Z\]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+Y_0 = \begin{bmatrix}
+  \mathbf{y}_{p + 1}^T \\
+  \mathbf{y}_{p + 2}^T \\
+  \vdots \\
+  \mathbf{y}_n^T
+\end{bmatrix}_{s \times m} \equiv Y_{p + 1} \in \mathbb{R}^{s \times m}
+\]</span></p>
+<p>by <code>build_y0()</code></p>
+<p>and</p>
+<p><span class="math display">\[
+X_0 = \left[\begin{array}{c|c|c|c}
+  \mathbf{y}_p^T &amp; \cdots &amp; \mathbf{y}_1^T &amp; 1 \\
+  \mathbf{y}_{p + 1}^T &amp; \cdots &amp; \mathbf{y}_2^T &amp; 1 \\
+  \vdots &amp; \vdots &amp; \cdots &amp; \vdots \\
+  \mathbf{y}_{T - 1}^T &amp; \cdots &amp; \mathbf{y}_{T - p}^T &amp; 1
+\end{array}\right]_{s \times k} = \begin{bmatrix}
+  Y_p &amp; Y_{p - 1} &amp; \cdots &amp; \mathbf{1}_{T - p}
+\end{bmatrix} \in \mathbb{R}^{s \times k}
+\]</span></p>
+<p>by <code>build_design()</code>. Coefficient matrix is the form of</p>
+<p><span class="math display">\[
+A = \begin{bmatrix}
+  A_1^T \\
+  \vdots \\
+  A_p^T \\
+  \mathbf{c}^T
+\end{bmatrix} \in \mathbb{R}^{k \times m}
+\]</span></p>
+<p>This form also corresponds to the other model. Use
+<code>var_lm(y, p)</code> to model VAR(p). You can specify
+<code>type = &quot;none&quot;</code> to get model without constant term.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>(fit_var <span class="ot">&lt;-</span> <span class="fu">var_lm</span>(etf_train, var_lag))</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; var_lm(y = etf_train, p = var_lag)</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; VAR(5) Estimation using least squares</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; LSE for A1:</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_1  OVXCLS_1  EVZCLS_1  VXFXICLS_1</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; GVZCLS     0.93290    0.0545    0.0659     -0.0346</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; OVXCLS    -0.02367    1.0047   -0.1447      0.0324</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; EVZCLS    -0.00789    0.0102    0.9810      0.0199</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; VXFXICLS  -0.03868    0.0109    0.0754      0.9328</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; LSE for A2:</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_2  OVXCLS_2  EVZCLS_2  VXFXICLS_2</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; GVZCLS     -0.0781  -0.04865    0.0829      0.0561</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; OVXCLS      0.0880   0.01207    0.2729     -0.1173</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; EVZCLS      0.0195   0.00255   -0.1071     -0.0383</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; VXFXICLS    0.0896   0.04278   -0.0691      0.0419</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; LSE for A3:</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_3  OVXCLS_3  EVZCLS_3  VXFXICLS_3</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt; GVZCLS      0.0424  -0.00452  -0.03245    -0.05967</span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt; OVXCLS     -0.0272  -0.09144  -0.05764    -0.06255</span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt; EVZCLS     -0.0123   0.00864   0.08693     0.00252</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt; VXFXICLS   -0.0266  -0.04810   0.00851    -0.02137</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt; LSE for A4:</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_4  OVXCLS_4  EVZCLS_4  VXFXICLS_4</span></span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="co">#&gt; GVZCLS    -0.00793   0.01072  -0.01513      0.0616</span></span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="co">#&gt; OVXCLS    -0.04343  -0.00377  -0.00694      0.1445</span></span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="co">#&gt; EVZCLS     0.00614  -0.02278  -0.01007      0.0200</span></span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="co">#&gt; VXFXICLS  -0.00755  -0.05555   0.08783     -0.1025</span></span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a><span class="co">#&gt; LSE for A5:</span></span>
+<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_5  OVXCLS_5  EVZCLS_5  VXFXICLS_5</span></span>
+<span id="cb5-42"><a href="#cb5-42" tabindex="-1"></a><span class="co">#&gt; GVZCLS      0.0728  -0.01745   -0.0886   -0.017273</span></span>
+<span id="cb5-43"><a href="#cb5-43" tabindex="-1"></a><span class="co">#&gt; OVXCLS      0.0104   0.07151   -0.0637    0.002018</span></span>
+<span id="cb5-44"><a href="#cb5-44" tabindex="-1"></a><span class="co">#&gt; EVZCLS     -0.0113   0.00581    0.0202    0.000498</span></span>
+<span id="cb5-45"><a href="#cb5-45" tabindex="-1"></a><span class="co">#&gt; VXFXICLS   -0.0155   0.04192   -0.0254    0.093984</span></span>
+<span id="cb5-46"><a href="#cb5-46" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-47"><a href="#cb5-47" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-48"><a href="#cb5-48" tabindex="-1"></a><span class="co">#&gt; LSE for constant:</span></span>
+<span id="cb5-49"><a href="#cb5-49" tabindex="-1"></a><span class="co">#&gt;   GVZCLS    OVXCLS    EVZCLS  VXFXICLS  </span></span>
+<span id="cb5-50"><a href="#cb5-50" tabindex="-1"></a><span class="co">#&gt;    0.571     0.145     0.129     0.875  </span></span>
+<span id="cb5-51"><a href="#cb5-51" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-52"><a href="#cb5-52" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-53"><a href="#cb5-53" tabindex="-1"></a><span class="co">#&gt; --------------------------------------------------</span></span>
+<span id="cb5-54"><a href="#cb5-54" tabindex="-1"></a><span class="co">#&gt; *_j of the Coefficient matrix: corresponding to the j-th VAR lag</span></span></code></pre></div>
+<p>The package provide <code>S3</code> object.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># class---------------</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">class</span>(fit_var)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; [1] &quot;varlse&quot;   &quot;bvharmod&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co"># inheritance---------</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="fu">is.varlse</span>(fit_var)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co"># names---------------</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="fu">names</span>(fit_var)</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;coefficients&quot;  &quot;fitted.values&quot; &quot;residuals&quot;     &quot;covmat&quot;       </span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt;  [5] &quot;df&quot;            &quot;p&quot;             &quot;m&quot;             &quot;obs&quot;          </span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt;  [9] &quot;totobs&quot;        &quot;call&quot;          &quot;process&quot;       &quot;type&quot;         </span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; [13] &quot;y0&quot;            &quot;design&quot;        &quot;y&quot;</span></span></code></pre></div>
+</div>
+<div id="vhar" class="section level2">
+<h2>VHAR</h2>
+<p>Consider Vector HAR (VHAR) model.</p>
+<p><span class="math display">\[\mathbf{Y}_t = \mathbf{c}+ \Phi^{(d)} +
+\mathbf{Y}_{t - 1} + \Phi^{(w)} \mathbf{Y}_{t - 1}^{(w)} + \Phi^{(m)}
+\mathbf{Y}_{t - 1}^{(m)} + \boldsymbol\epsilon_t\]</span></p>
+<p>where <span class="math inline">\(\mathbf{Y}_t\)</span> is daily RV
+and</p>
+<p><span class="math display">\[\mathbf{Y}_t^{(w)} = \frac{1}{5} \left(
+\mathbf{Y}_t + \cdots + \mathbf{Y}_{t - 4} \right)\]</span></p>
+<p>is weekly RV</p>
+<p>and</p>
+<p><span class="math display">\[\mathbf{Y}_t^{(m)} = \frac{1}{22} \left(
+\mathbf{Y}_t + \cdots + \mathbf{Y}_{t - 21} \right)\]</span></p>
+<p>is monthly RV. This model can be expressed by</p>
+<p><span class="math display">\[Y_0 = X_1 \Phi + Z\]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+\Phi = \begin{bmatrix}
+  \Phi^{(d)T} \\
+  \Phi^{(w)T} \\
+  \Phi^{(m)T} \\
+  \mathbf{c}^T
+\end{bmatrix} \in \mathbb{R}^{(3m + 1) \times m}
+\]</span></p>
+<p>Let <span class="math inline">\(T\)</span> be</p>
+<p><span class="math display">\[
+\mathbb{C}_0 \mathpunct{:}=\begin{bmatrix}
+  1 &amp; 0 &amp; \cdots &amp; 0 &amp; 0 &amp; \cdots &amp; 0 \\
+  1 / 5 &amp; 1 / 5 &amp; \cdots &amp; 1 / 5 &amp; 0 &amp; \cdots &amp;
+0 \\
+  1 / 22 &amp; 1 / 22 &amp; \cdots &amp; 1 / 22 &amp; 1 / 22 &amp;
+\cdots &amp; 1 / 22
+\end{bmatrix} \otimes I_m \in \mathbb{R}^{3m \times 22m}
+\]</span></p>
+<p>and let <span class="math inline">\(\mathbb{C}_{HAR}\)</span> be</p>
+<p><span class="math display">\[
+\mathbb{C}_{HAR} \mathpunct{:}=\left[\begin{array}{c|c}
+  T &amp; \mathbf{0}_{3m} \\ \hline
+  \mathbf{0}_{3m}^T &amp; 1
+\end{array}\right] \in \mathbb{R}^{(3m + 1) \times (22m + 1)}
+\]</span></p>
+<p>Then for <span class="math inline">\(X_0\)</span> in VAR(p),</p>
+<p><span class="math display">\[
+X_1 = X_0 \mathbb{C}_{HAR}^T = \begin{bmatrix}
+  \mathbf{y}_{22}^T &amp; \mathbf{y}_{22}^{(w)T} &amp;
+\mathbf{y}_{22}^{(m)T} &amp; 1 \\
+  \mathbf{y}_{23}^T &amp; \mathbf{y}_{23}^{(w)T} &amp;
+\mathbf{y}_{23}^{(m)T} &amp; 1 \\
+  \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+  \mathbf{y}_{T - 1}^T &amp; \mathbf{y}_{T - 1}^{(w)T} &amp;
+\mathbf{y}_{T - 1}^{(m)T} &amp; 1
+\end{bmatrix} \in \mathbb{R}^{s \times (3m + 1)}
+\]</span></p>
+<p>This package fits VHAR by scaling VAR(p) using <span class="math inline">\(\mathbb{C}_{HAR}\)</span>
+(<code>scale_har(m, week = 5, month = 22)</code>). Use
+<code>vhar_lm(y)</code> to fit VHAR. You can specify
+<code>type = &quot;none&quot;</code> to get model without constant term.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>(fit_har <span class="ot">&lt;-</span> <span class="fu">vhar_lm</span>(etf_train))</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; vhar_lm(y = etf_train)</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt; VHAR Estimation====================================================</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt; LSE for day:</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_day  OVXCLS_day  EVZCLS_day  VXFXICLS_day</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt; GVZCLS       0.87561      0.0447      0.1623      -0.03772</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt; OVXCLS       0.04147      0.9942     -0.0605      -0.09361</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt; EVZCLS       0.00305      0.0281      0.9206      -0.00748</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt; VXFXICLS     0.01021      0.0569      0.0440       0.91713</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt; LSE for week:</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_week  OVXCLS_week  EVZCLS_week  VXFXICLS_week</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#&gt; GVZCLS        0.01622      -0.0554      -0.1608         0.0637</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co">#&gt; OVXCLS       -0.07093      -0.0373       0.2000         0.1034</span></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="co">#&gt; EVZCLS       -0.00334      -0.0414      -0.0101         0.0239</span></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co">#&gt; VXFXICLS     -0.03756      -0.0787      -0.0135         0.0480</span></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a><span class="co">#&gt; LSE for month:</span></span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_month  OVXCLS_month  EVZCLS_month  VXFXICLS_month</span></span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a><span class="co">#&gt; GVZCLS        0.084981       0.00359        0.0228         -0.0299</span></span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a><span class="co">#&gt; OVXCLS        0.045986       0.03825       -0.1564         -0.0157</span></span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a><span class="co">#&gt; EVZCLS       -0.000597       0.02030        0.0501         -0.0138</span></span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a><span class="co">#&gt; VXFXICLS      0.041648       0.01263        0.0639         -0.0371</span></span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a><span class="co">#&gt; LSE for constant:</span></span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a><span class="co">#&gt;   GVZCLS    OVXCLS    EVZCLS  VXFXICLS  </span></span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a><span class="co">#&gt;    0.491     0.135     0.105     0.926  </span></span>
+<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a><span class="co">#&gt; --------------------------------------------------</span></span>
+<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a><span class="co">#&gt; *_day, *_week, *_month of the Coefficient matrix: daily, weekly, and monthly term in the VHAR model</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># class----------------</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">class</span>(fit_har)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; [1] &quot;vharlse&quot;  &quot;bvharmod&quot;</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co"># inheritance----------</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="fu">is.varlse</span>(fit_har)</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="fu">is.vharlse</span>(fit_har)</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co"># complements----------</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="fu">names</span>(fit_har)</span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;coefficients&quot;  &quot;fitted.values&quot; &quot;residuals&quot;     &quot;covmat&quot;       </span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt;  [5] &quot;df&quot;            &quot;p&quot;             &quot;week&quot;          &quot;month&quot;        </span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt;  [9] &quot;m&quot;             &quot;obs&quot;           &quot;totobs&quot;        &quot;call&quot;         </span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt; [13] &quot;process&quot;       &quot;type&quot;          &quot;HARtrans&quot;      &quot;y0&quot;           </span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; [17] &quot;design&quot;        &quot;y&quot;</span></span></code></pre></div>
+</div>
+<div id="bvar" class="section level2">
+<h2>BVAR</h2>
+<p><code>bvhar</code> package provides two prior framework - Minnesota
+prior and flat prior.</p>
+<div id="minnesota-prior" class="section level3">
+<h3>Minnesota prior</h3>
+<ul>
+<li>Litterman (1986) and Bańbura et al. (2010)</li>
+<li>All the equations are centered around the random walk with
+drift.</li>
+<li><em>Prior mean</em>: Recent lags provide more reliable information
+than the more distant ones.</li>
+<li><em>Prior variance</em>: Own lags explain more of the variation of a
+given variable than the lags of other variables in the equation.</li>
+</ul>
+<p>First specify the prior using
+<code>set_bvar(sigma, lambda, delta, eps = 1e-04)</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>bvar_lag <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>sig <span class="ot">&lt;-</span> <span class="fu">apply</span>(etf_train, <span class="dv">2</span>, sd) <span class="co"># sigma vector</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>lam <span class="ot">&lt;-</span> .<span class="dv">2</span> <span class="co"># lambda</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, m) <span class="co"># delta vector (0 vector since RV stationary)</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>eps <span class="ot">&lt;-</span> <span class="fl">1e-04</span> <span class="co"># very small number</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>(bvar_spec <span class="ot">&lt;-</span> <span class="fu">set_bvar</span>(sig, lam, delta, eps))</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; Model Specification for BVAR</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; Parameters: Coefficent matrice and Covariance matrix</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt; Prior: Minnesota</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; # Type &#39;?bvar_minnesota&#39; in the console for some help.</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt; ========================================================</span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;sigma&#39;:</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt;   GVZCLS    OVXCLS    EVZCLS  VXFXICLS  </span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt;     3.77     10.63      2.27      3.81  </span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;lambda&#39;:</span></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="co">#&gt; [1]  0.2</span></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;delta&#39;:</span></span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a><span class="co">#&gt; [1]  0  0  0  0</span></span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;eps&#39;:</span></span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="co">#&gt; [1]  1e-04</span></span></code></pre></div>
+<p>In turn,
+<code>bvar_minnesota(y, p, bayes_spec, include_mean = TRUE)</code> fits
+BVAR(p).</p>
+<ul>
+<li><code>y</code>: Multivariate time series data. It should be data
+frame or matrix, which means that every column is numeric. Each column
+indicates variable, i.e. it sould be wide format.</li>
+<li><code>p</code>: Order of BVAR</li>
+<li><code>bayes_spec</code>: Output of <code>set_bvar()</code></li>
+<li><code>include_mean = TRUE</code>: By default, you include the
+constant term in the model.</li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>(fit_bvar <span class="ot">&lt;-</span> <span class="fu">bvar_minnesota</span>(etf_train, bvar_lag, bvar_spec))</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; bvar_minnesota(y = etf_train, p = bvar_lag, bayes_spec = bvar_spec)</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; BVAR(5) with Minnesota Prior</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt; A ~ Matrix Normal (Mean, Precision, Scale = Sigma)</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for A1 part:</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_1  OVXCLS_1  EVZCLS_1  VXFXICLS_1</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt; GVZCLS      0.7771   0.00915    0.0628      0.0193</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt; OVXCLS      0.0445   0.70884    0.1111      0.0167</span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; EVZCLS      0.0104   0.01068    0.7036      0.0266</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; VXFXICLS    0.0214   0.00673    0.1044      0.7674</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for A2 part:</span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="co">#&gt;            GVZCLS_2   OVXCLS_2  EVZCLS_2  VXFXICLS_2</span></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co">#&gt; GVZCLS     0.082726  -0.006736  -0.01387     -0.0020</span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="co">#&gt; OVXCLS     0.000568   0.140781   0.02419     -0.0436</span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="co">#&gt; EVZCLS    -0.004778   0.000769   0.11756     -0.0114</span></span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="co">#&gt; VXFXICLS   0.013424  -0.003779   0.00369      0.1063</span></span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for A3 part:</span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_3   OVXCLS_3  EVZCLS_3  VXFXICLS_3</span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#&gt; GVZCLS     0.03574  -0.003825  -0.01504    -0.00581</span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt; OVXCLS    -0.01733   0.054037   0.00196    -0.01874</span></span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt; EVZCLS    -0.00391   0.000223   0.05065    -0.00168</span></span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="co">#&gt; VXFXICLS  -0.00891  -0.006167  -0.00435     0.02176</span></span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for A4 part:</span></span>
+<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_4   OVXCLS_4   EVZCLS_4  VXFXICLS_4</span></span>
+<span id="cb10-36"><a href="#cb10-36" tabindex="-1"></a><span class="co">#&gt; GVZCLS     0.02474  -0.001932  -0.011546     0.00263</span></span>
+<span id="cb10-37"><a href="#cb10-37" tabindex="-1"></a><span class="co">#&gt; OVXCLS    -0.00987   0.030763   0.003771     0.00845</span></span>
+<span id="cb10-38"><a href="#cb10-38" tabindex="-1"></a><span class="co">#&gt; EVZCLS    -0.00318  -0.000206   0.027289     0.00161</span></span>
+<span id="cb10-39"><a href="#cb10-39" tabindex="-1"></a><span class="co">#&gt; VXFXICLS  -0.00898  -0.004378   0.000232     0.00582</span></span>
+<span id="cb10-40"><a href="#cb10-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-41"><a href="#cb10-41" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-42"><a href="#cb10-42" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for A5 part:</span></span>
+<span id="cb10-43"><a href="#cb10-43" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_5   OVXCLS_5  EVZCLS_5  VXFXICLS_5</span></span>
+<span id="cb10-44"><a href="#cb10-44" tabindex="-1"></a><span class="co">#&gt; GVZCLS     0.01986  -1.47e-03  -0.00970     0.00127</span></span>
+<span id="cb10-45"><a href="#cb10-45" tabindex="-1"></a><span class="co">#&gt; OVXCLS    -0.00357   2.10e-02   0.00339     0.01017</span></span>
+<span id="cb10-46"><a href="#cb10-46" tabindex="-1"></a><span class="co">#&gt; EVZCLS    -0.00284   1.59e-05   0.01729     0.00159</span></span>
+<span id="cb10-47"><a href="#cb10-47" tabindex="-1"></a><span class="co">#&gt; VXFXICLS  -0.00431  -1.70e-03   0.00263     0.01207</span></span>
+<span id="cb10-48"><a href="#cb10-48" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-49"><a href="#cb10-49" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-50"><a href="#cb10-50" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for constant part:</span></span>
+<span id="cb10-51"><a href="#cb10-51" tabindex="-1"></a><span class="co">#&gt;   GVZCLS    OVXCLS    EVZCLS  VXFXICLS  </span></span>
+<span id="cb10-52"><a href="#cb10-52" tabindex="-1"></a><span class="co">#&gt;   0.7271    0.3713    0.0971    1.2139  </span></span>
+<span id="cb10-53"><a href="#cb10-53" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-54"><a href="#cb10-54" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-55"><a href="#cb10-55" tabindex="-1"></a><span class="co">#&gt; dim(Matrix Normal precision matrix):</span></span>
+<span id="cb10-56"><a href="#cb10-56" tabindex="-1"></a><span class="co">#&gt; [1]  21  21</span></span>
+<span id="cb10-57"><a href="#cb10-57" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-58"><a href="#cb10-58" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-59"><a href="#cb10-59" tabindex="-1"></a><span class="co">#&gt; Sigma ~ Inverse-Wishart</span></span>
+<span id="cb10-60"><a href="#cb10-60" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb10-61"><a href="#cb10-61" tabindex="-1"></a><span class="co">#&gt; IW scale matrix:</span></span>
+<span id="cb10-62"><a href="#cb10-62" tabindex="-1"></a><span class="co">#&gt;           GVZCLS  OVXCLS  EVZCLS  VXFXICLS</span></span>
+<span id="cb10-63"><a href="#cb10-63" tabindex="-1"></a><span class="co">#&gt; GVZCLS      1285     375     115       287</span></span>
+<span id="cb10-64"><a href="#cb10-64" tabindex="-1"></a><span class="co">#&gt; OVXCLS       375    3638     131       397</span></span>
+<span id="cb10-65"><a href="#cb10-65" tabindex="-1"></a><span class="co">#&gt; EVZCLS       115     131     220       126</span></span>
+<span id="cb10-66"><a href="#cb10-66" tabindex="-1"></a><span class="co">#&gt; VXFXICLS     287     397     126      1186</span></span>
+<span id="cb10-67"><a href="#cb10-67" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-68"><a href="#cb10-68" tabindex="-1"></a><span class="co">#&gt; IW degrees of freedom:</span></span>
+<span id="cb10-69"><a href="#cb10-69" tabindex="-1"></a><span class="co">#&gt; [1] 887</span></span>
+<span id="cb10-70"><a href="#cb10-70" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-71"><a href="#cb10-71" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-72"><a href="#cb10-72" tabindex="-1"></a><span class="co">#&gt; --------------------------------------------------</span></span>
+<span id="cb10-73"><a href="#cb10-73" tabindex="-1"></a><span class="co">#&gt; *_j of the Coefficient matrix: corresponding to the j-th BVAR lag</span></span></code></pre></div>
+<p>It is <code>bvarmn</code> class. For Bayes computation, it also has
+other class such as <code>normaliw</code> and <code>bvharmod</code>.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># class---------------</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">class</span>(fit_bvar)</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co">#&gt; [1] &quot;bvarmn&quot;   &quot;normaliw&quot; &quot;bvharmod&quot;</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co"># inheritance---------</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="fu">is.bvarmn</span>(fit_bvar)</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co"># names---------------</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="fu">names</span>(fit_bvar)</span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;coefficients&quot;    &quot;fitted.values&quot;   &quot;residuals&quot;       &quot;mn_prec&quot;        </span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt;  [5] &quot;iw_scale&quot;        &quot;iw_shape&quot;        &quot;df&quot;              &quot;p&quot;              </span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co">#&gt;  [9] &quot;m&quot;               &quot;obs&quot;             &quot;totobs&quot;          &quot;call&quot;           </span></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt; [13] &quot;process&quot;         &quot;spec&quot;            &quot;type&quot;            &quot;prior_mean&quot;     </span></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co">#&gt; [17] &quot;prior_precision&quot; &quot;prior_scale&quot;     &quot;prior_shape&quot;     &quot;y0&quot;             </span></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt; [21] &quot;design&quot;          &quot;y&quot;</span></span></code></pre></div>
+</div>
+<div id="flat-prior" class="section level3">
+<h3>Flat prior</h3>
+<p>Ghosh et al. (2018) provides flat prior for covariance matrix,
+i.e. non-informative. Use <code>set_bvar_flat(U)</code>.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>(flat_spec <span class="ot">&lt;-</span> <span class="fu">set_bvar_flat</span>(<span class="at">U =</span> <span class="dv">5000</span> <span class="sc">*</span> <span class="fu">diag</span>(m <span class="sc">*</span> bvar_lag <span class="sc">+</span> <span class="dv">1</span>))) <span class="co"># c * I</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="co">#&gt; Model Specification for BVAR</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co">#&gt; Parameters: Coefficent matrice and Covariance matrix</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co">#&gt; Prior: Flat</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co">#&gt; # Type &#39;?bvar_flat&#39; in the console for some help.</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co">#&gt; ========================================================</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;U&#39;:</span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co">#&gt; # A matrix:  21 x 21 </span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#&gt;        [,1]  [,2]  [,3]  [,4]  [,5]</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt;  [1,]  5000     0     0     0     0</span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co">#&gt;  [2,]     0  5000     0     0     0</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt;  [3,]     0     0  5000     0     0</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#&gt;  [4,]     0     0     0  5000     0</span></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="co">#&gt;  [5,]     0     0     0     0  5000</span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="co">#&gt;  [6,]     0     0     0     0     0</span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="co">#&gt;  [7,]     0     0     0     0     0</span></span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="co">#&gt;  [8,]     0     0     0     0     0</span></span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="co">#&gt;  [9,]     0     0     0     0     0</span></span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a><span class="co">#&gt; [10,]     0     0     0     0     0</span></span>
+<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a><span class="co">#&gt; # ... with 11 more rows</span></span></code></pre></div>
+<p>Then
+<code>bvar_flat(y, p, bayes_spec, include_mean = TRUE)</code>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>(fit_ghosh <span class="ot">&lt;-</span> <span class="fu">bvar_flat</span>(etf_train, bvar_lag, flat_spec))</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co">#&gt; bvar_flat(y = etf_train, p = bvar_lag, bayes_spec = flat_spec)</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co">#&gt; BVAR(5) with Flat Prior</span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt; A ~ Matrix Normal (Mean, U^{-1}, Scale 2 = Sigma)</span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for A1 part:</span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_1  OVXCLS_1  EVZCLS_1  VXFXICLS_1</span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; GVZCLS      0.3128    0.0460    0.0205      0.0457</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt; OVXCLS      0.0440    0.4128    0.0186      0.0314</span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt; EVZCLS      0.0174    0.0230    0.1334      0.0410</span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt; VXFXICLS    0.0477    0.0464    0.0481      0.3197</span></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for A2 part:</span></span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_2  OVXCLS_2  EVZCLS_2  VXFXICLS_2</span></span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="co">#&gt; GVZCLS     0.19811   0.00287   0.00771      0.0194</span></span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="co">#&gt; OVXCLS     0.01595   0.23709   0.00978     -0.0111</span></span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="co">#&gt; EVZCLS     0.00425   0.01205   0.11715      0.0201</span></span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="co">#&gt; VXFXICLS   0.02725   0.01516   0.03513      0.2162</span></span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for A3 part:</span></span>
+<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_3  OVXCLS_3  EVZCLS_3  VXFXICLS_3</span></span>
+<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#&gt; GVZCLS     0.13884   -0.0153  -0.00102     0.00591</span></span>
+<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co">#&gt; OVXCLS    -0.00741    0.1304   0.00361    -0.02452</span></span>
+<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a><span class="co">#&gt; EVZCLS    -0.00353    0.0079   0.10724     0.01150</span></span>
+<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a><span class="co">#&gt; VXFXICLS   0.00797   -0.0146   0.02633     0.14628</span></span>
+<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-33"><a href="#cb13-33" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-34"><a href="#cb13-34" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for A4 part:</span></span>
+<span id="cb13-35"><a href="#cb13-35" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_4  OVXCLS_4  EVZCLS_4  VXFXICLS_4</span></span>
+<span id="cb13-36"><a href="#cb13-36" tabindex="-1"></a><span class="co">#&gt; GVZCLS     0.11392  -0.01775  -0.00653     0.00884</span></span>
+<span id="cb13-37"><a href="#cb13-37" tabindex="-1"></a><span class="co">#&gt; OVXCLS    -0.01626   0.09421   0.00195    -0.00572</span></span>
+<span id="cb13-38"><a href="#cb13-38" tabindex="-1"></a><span class="co">#&gt; EVZCLS    -0.00847   0.00565   0.10046     0.01098</span></span>
+<span id="cb13-39"><a href="#cb13-39" tabindex="-1"></a><span class="co">#&gt; VXFXICLS  -0.00356  -0.03067   0.02292     0.10552</span></span>
+<span id="cb13-40"><a href="#cb13-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-41"><a href="#cb13-41" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-42"><a href="#cb13-42" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for A5 part:</span></span>
+<span id="cb13-43"><a href="#cb13-43" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_5  OVXCLS_5  EVZCLS_5  VXFXICLS_5</span></span>
+<span id="cb13-44"><a href="#cb13-44" tabindex="-1"></a><span class="co">#&gt; GVZCLS     0.11282   -0.0208  -0.01028     0.01136</span></span>
+<span id="cb13-45"><a href="#cb13-45" tabindex="-1"></a><span class="co">#&gt; OVXCLS    -0.01507    0.1004   0.00155     0.00973</span></span>
+<span id="cb13-46"><a href="#cb13-46" tabindex="-1"></a><span class="co">#&gt; EVZCLS    -0.01252    0.0104   0.09667     0.01361</span></span>
+<span id="cb13-47"><a href="#cb13-47" tabindex="-1"></a><span class="co">#&gt; VXFXICLS  -0.00492   -0.0215   0.02342     0.10353</span></span>
+<span id="cb13-48"><a href="#cb13-48" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-49"><a href="#cb13-49" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-50"><a href="#cb13-50" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for constant part:</span></span>
+<span id="cb13-51"><a href="#cb13-51" tabindex="-1"></a><span class="co">#&gt;   GVZCLS    OVXCLS    EVZCLS  VXFXICLS  </span></span>
+<span id="cb13-52"><a href="#cb13-52" tabindex="-1"></a><span class="co">#&gt; 5.49e-03  7.82e-04  8.83e-05  9.82e-03  </span></span>
+<span id="cb13-53"><a href="#cb13-53" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-54"><a href="#cb13-54" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-55"><a href="#cb13-55" tabindex="-1"></a><span class="co">#&gt; dim(Matrix Normal precision matrix):</span></span>
+<span id="cb13-56"><a href="#cb13-56" tabindex="-1"></a><span class="co">#&gt; [1]  21  21</span></span>
+<span id="cb13-57"><a href="#cb13-57" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-58"><a href="#cb13-58" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-59"><a href="#cb13-59" tabindex="-1"></a><span class="co">#&gt; Sigma ~ Inverse-Wishart</span></span>
+<span id="cb13-60"><a href="#cb13-60" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb13-61"><a href="#cb13-61" tabindex="-1"></a><span class="co">#&gt; IW scale matrix:</span></span>
+<span id="cb13-62"><a href="#cb13-62" tabindex="-1"></a><span class="co">#&gt;           GVZCLS  OVXCLS  EVZCLS  VXFXICLS</span></span>
+<span id="cb13-63"><a href="#cb13-63" tabindex="-1"></a><span class="co">#&gt; GVZCLS      2483     595     209       535</span></span>
+<span id="cb13-64"><a href="#cb13-64" tabindex="-1"></a><span class="co">#&gt; OVXCLS       595    3580     216       578</span></span>
+<span id="cb13-65"><a href="#cb13-65" tabindex="-1"></a><span class="co">#&gt; EVZCLS       209     216     771       354</span></span>
+<span id="cb13-66"><a href="#cb13-66" tabindex="-1"></a><span class="co">#&gt; VXFXICLS     535     578     354      2472</span></span>
+<span id="cb13-67"><a href="#cb13-67" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-68"><a href="#cb13-68" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-69"><a href="#cb13-69" tabindex="-1"></a><span class="co">#&gt; --------------------------------------------------</span></span>
+<span id="cb13-70"><a href="#cb13-70" tabindex="-1"></a><span class="co">#&gt; *_j of the Coefficient matrix: corresponding to the j-th BVAR lag</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="co"># class---------------</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="fu">class</span>(fit_ghosh)</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co">#&gt; [1] &quot;bvarflat&quot; &quot;normaliw&quot; &quot;bvharmod&quot;</span></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co"># inheritance---------</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="fu">is.bvarflat</span>(fit_ghosh)</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co"># names---------------</span></span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="fu">names</span>(fit_ghosh)</span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;coefficients&quot;    &quot;fitted.values&quot;   &quot;residuals&quot;       &quot;mn_prec&quot;        </span></span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="co">#&gt;  [5] &quot;iw_scale&quot;        &quot;iw_shape&quot;        &quot;df&quot;              &quot;p&quot;              </span></span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="co">#&gt;  [9] &quot;m&quot;               &quot;obs&quot;             &quot;totobs&quot;          &quot;process&quot;        </span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a><span class="co">#&gt; [13] &quot;spec&quot;            &quot;type&quot;            &quot;call&quot;            &quot;prior_mean&quot;     </span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a><span class="co">#&gt; [17] &quot;prior_precision&quot; &quot;y0&quot;              &quot;design&quot;          &quot;y&quot;</span></span></code></pre></div>
+</div>
+</div>
+<div id="bvhar" class="section level2">
+<h2>BVHAR</h2>
+<p>Consider the VAR(22) form of VHAR.</p>
+<p><span class="math display">\[
+\begin{aligned}
+  \mathbf{Y}_t = \mathbf{c}&amp; + \left( \Phi^{(d)} + \frac{1}{5}
+\Phi^{(w)} + \frac{1}{22} \Phi^{(m)} \right) \mathbf{Y}_{t - 1} \\
+  &amp; + \left( \frac{1}{5} \Phi^{(w)} + \frac{1}{22} \Phi^{(m)}
+\right) \mathbf{Y}_{t - 2} + \cdots \left( \frac{1}{5} \Phi^{(w)} +
+\frac{1}{22} \Phi^{(m)} \right) \mathbf{Y}_{t - 5} \\
+  &amp; + \frac{1}{22} \Phi^{(m)} \mathbf{Y}_{t - 6} + \cdots +
+\frac{1}{22} \Phi^{(m)} \mathbf{Y}_{t - 22}
+\end{aligned}
+\]</span></p>
+<p>What does Minnesota prior mean in VHAR model?</p>
+<ul>
+<li>All the equations are centered around <span class="math inline">\(\mathbf{Y}_t + \mathbf{c}+ \Phi^{(d)}
+\mathbf{Y}_{t - 1} + \boldsymbol\epsilon_t\)</span></li>
+<li>RW form: shrink diagonal elements of <span class="math inline">\(\Phi^{(d)}\)</span> toward one
+<ul>
+<li><span class="math inline">\(\Phi^{(w)}\)</span> and <span class="math inline">\(\Phi^{(m)}\)</span> to zero</li>
+</ul></li>
+<li>WN form: <span class="math inline">\(\delta_i = 0\)</span></li>
+</ul>
+<p>For more simplicity, write coefficient matrices by <span class="math inline">\(\Phi^{(1)}, \Phi^{(2)}, \Phi^{(3)}\)</span>. If we
+apply the prior in the same way, Minnesota moment becomes</p>
+<p><span class="math display">\[
+E \left[ (\Phi^{(l)})_{ij} \right] = \begin{cases}
+  \delta_i &amp; j = i, \; l = 1 \\
+  0 &amp; o/w
+\end{cases} \quad \mathrm{Var}\left[ (\Phi^{(l)})_{ij} \right] =
+\begin{cases}
+  \frac{\lambda^2}{l^2} &amp; j = i \\
+  \nu \frac{\lambda^2}{l^2} \frac{\sigma_i^2}{\sigma_j^2} &amp; o/w
+\end{cases}
+\]</span></p>
+<p>We call this VAR-type Minnesota prior or BVHAR-S.</p>
+<div id="bvhar-s" class="section level3">
+<h3>BVHAR-S</h3>
+<p><code>set_bvhar(sigma, lambda, delta, eps = 1e-04)</code> specifies
+VAR-type Minnesota prior.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>(bvhar_spec_v1 <span class="ot">&lt;-</span> <span class="fu">set_bvhar</span>(sig, lam, delta, eps))</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="co">#&gt; Model Specification for BVHAR</span></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="co">#&gt; Parameters: Coefficent matrice and Covariance matrix</span></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a><span class="co">#&gt; Prior: MN_VAR</span></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="co">#&gt; # Type &#39;?bvhar_minnesota&#39; in the console for some help.</span></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="co">#&gt; ========================================================</span></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;sigma&#39;:</span></span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="co">#&gt;   GVZCLS    OVXCLS    EVZCLS  VXFXICLS  </span></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="co">#&gt;     3.77     10.63      2.27      3.81  </span></span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;lambda&#39;:</span></span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="co">#&gt; [1]  0.2</span></span>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;delta&#39;:</span></span>
+<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a><span class="co">#&gt; [1]  0  0  0  0</span></span>
+<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-19"><a href="#cb15-19" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;eps&#39;:</span></span>
+<span id="cb15-20"><a href="#cb15-20" tabindex="-1"></a><span class="co">#&gt; [1]  1e-04</span></span></code></pre></div>
+<p><code>bvhar_minnesota(y, har = c(5, 22), bayes_spec, include_mean = TRUE)</code>
+can fit BVHAR with this prior. This is the default prior setting.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>(fit_bvhar_v1 <span class="ot">&lt;-</span> <span class="fu">bvhar_minnesota</span>(etf_train, <span class="at">bayes_spec =</span> bvhar_spec_v1))</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="co">#&gt; bvhar_minnesota(y = etf_train, bayes_spec = bvhar_spec_v1)</span></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a><span class="co">#&gt; BVHAR with Minnesota Prior</span></span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a><span class="co">#&gt; Phi ~ Matrix Normal (Mean, Scale 1, Scale 2 = Sigma)</span></span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for day:</span></span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_day  OVXCLS_day  EVZCLS_day  VXFXICLS_day</span></span>
+<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a><span class="co">#&gt; GVZCLS        0.7808     0.00502      0.0595        0.0181</span></span>
+<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a><span class="co">#&gt; OVXCLS        0.0419     0.75268      0.1293       -0.0129</span></span>
+<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a><span class="co">#&gt; EVZCLS        0.0109     0.00957      0.7248        0.0213</span></span>
+<span id="cb16-15"><a href="#cb16-15" tabindex="-1"></a><span class="co">#&gt; VXFXICLS      0.0252     0.00347      0.1003        0.8042</span></span>
+<span id="cb16-16"><a href="#cb16-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-17"><a href="#cb16-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-18"><a href="#cb16-18" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for week:</span></span>
+<span id="cb16-19"><a href="#cb16-19" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_week  OVXCLS_week  EVZCLS_week  VXFXICLS_week</span></span>
+<span id="cb16-20"><a href="#cb16-20" tabindex="-1"></a><span class="co">#&gt; GVZCLS         0.1160    -0.007669     -0.03216       -0.00181</span></span>
+<span id="cb16-21"><a href="#cb16-21" tabindex="-1"></a><span class="co">#&gt; OVXCLS        -0.0211     0.152822      0.02794       -0.00136</span></span>
+<span id="cb16-22"><a href="#cb16-22" tabindex="-1"></a><span class="co">#&gt; EVZCLS        -0.0103    -0.000372      0.13214       -0.00158</span></span>
+<span id="cb16-23"><a href="#cb16-23" tabindex="-1"></a><span class="co">#&gt; VXFXICLS      -0.0177    -0.010393      0.00229        0.10274</span></span>
+<span id="cb16-24"><a href="#cb16-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-25"><a href="#cb16-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-26"><a href="#cb16-26" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for month:</span></span>
+<span id="cb16-27"><a href="#cb16-27" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_month  OVXCLS_month  EVZCLS_month  VXFXICLS_month</span></span>
+<span id="cb16-28"><a href="#cb16-28" tabindex="-1"></a><span class="co">#&gt; GVZCLS         0.05269      -0.00345       -0.0110        -0.00302</span></span>
+<span id="cb16-29"><a href="#cb16-29" tabindex="-1"></a><span class="co">#&gt; OVXCLS         0.00556       0.05169       -0.0225        -0.01051</span></span>
+<span id="cb16-30"><a href="#cb16-30" tabindex="-1"></a><span class="co">#&gt; EVZCLS        -0.00441       0.00410        0.0502        -0.00138</span></span>
+<span id="cb16-31"><a href="#cb16-31" tabindex="-1"></a><span class="co">#&gt; VXFXICLS       0.00733      -0.00321        0.0109         0.00573</span></span>
+<span id="cb16-32"><a href="#cb16-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-33"><a href="#cb16-33" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-34"><a href="#cb16-34" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for constant part:</span></span>
+<span id="cb16-35"><a href="#cb16-35" tabindex="-1"></a><span class="co">#&gt;   GVZCLS    OVXCLS    EVZCLS  VXFXICLS  </span></span>
+<span id="cb16-36"><a href="#cb16-36" tabindex="-1"></a><span class="co">#&gt;   0.6107    0.1410    0.0741    1.1544  </span></span>
+<span id="cb16-37"><a href="#cb16-37" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-38"><a href="#cb16-38" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-39"><a href="#cb16-39" tabindex="-1"></a><span class="co">#&gt; dim(Matrix Normal precision matrix):</span></span>
+<span id="cb16-40"><a href="#cb16-40" tabindex="-1"></a><span class="co">#&gt; [1]  13  13</span></span>
+<span id="cb16-41"><a href="#cb16-41" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-42"><a href="#cb16-42" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-43"><a href="#cb16-43" tabindex="-1"></a><span class="co">#&gt; Sigma ~ Inverse-Wishart</span></span>
+<span id="cb16-44"><a href="#cb16-44" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb16-45"><a href="#cb16-45" tabindex="-1"></a><span class="co">#&gt; IW scale matrix:</span></span>
+<span id="cb16-46"><a href="#cb16-46" tabindex="-1"></a><span class="co">#&gt;           GVZCLS  OVXCLS  EVZCLS  VXFXICLS</span></span>
+<span id="cb16-47"><a href="#cb16-47" tabindex="-1"></a><span class="co">#&gt; GVZCLS      1268     366     114       286</span></span>
+<span id="cb16-48"><a href="#cb16-48" tabindex="-1"></a><span class="co">#&gt; OVXCLS       366    3742     131       378</span></span>
+<span id="cb16-49"><a href="#cb16-49" tabindex="-1"></a><span class="co">#&gt; EVZCLS       114     131     219       121</span></span>
+<span id="cb16-50"><a href="#cb16-50" tabindex="-1"></a><span class="co">#&gt; VXFXICLS     286     378     121      1189</span></span></code></pre></div>
+<p>This model is <code>bvharmn</code> class.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># class---------------</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="fu">class</span>(fit_bvhar_v1)</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="co">#&gt; [1] &quot;bvharmn&quot;  &quot;normaliw&quot; &quot;bvharmod&quot;</span></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="co"># inheritance---------</span></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="fu">is.bvharmn</span>(fit_bvhar_v1)</span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="co"># names---------------</span></span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="fu">names</span>(fit_bvhar_v1)</span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;coefficients&quot;    &quot;fitted.values&quot;   &quot;residuals&quot;       &quot;mn_prec&quot;        </span></span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a><span class="co">#&gt;  [5] &quot;iw_scale&quot;        &quot;iw_shape&quot;        &quot;df&quot;              &quot;p&quot;              </span></span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a><span class="co">#&gt;  [9] &quot;week&quot;            &quot;month&quot;           &quot;m&quot;               &quot;obs&quot;            </span></span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a><span class="co">#&gt; [13] &quot;totobs&quot;          &quot;call&quot;            &quot;process&quot;         &quot;spec&quot;           </span></span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a><span class="co">#&gt; [17] &quot;type&quot;            &quot;prior_mean&quot;      &quot;prior_precision&quot; &quot;prior_scale&quot;    </span></span>
+<span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a><span class="co">#&gt; [21] &quot;prior_shape&quot;     &quot;HARtrans&quot;        &quot;y0&quot;              &quot;design&quot;         </span></span>
+<span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a><span class="co">#&gt; [25] &quot;y&quot;</span></span></code></pre></div>
+</div>
+<div id="bvhar-l" class="section level3">
+<h3>BVHAR-L</h3>
+<p>Set <span class="math inline">\(\delta_i\)</span> for weekly and
+monthly coefficient matrices in above Minnesota moments:</p>
+<p><span class="math display">\[
+E \left[ (\Phi^{(l)})_{ij} \right] = \begin{cases}
+  d_i &amp; j = i, \; l = 1 \\
+  w_i &amp; j = i, \; l = 2 \\
+  m_i &amp; j = i, \; l = 3
+\end{cases}
+\]</span></p>
+<p>i.e. instead of one <code>delta</code> vector, set three vector</p>
+<ul>
+<li><code>daily</code></li>
+<li><code>weekly</code></li>
+<li><code>monthly</code></li>
+</ul>
+<p>This is called VHAR-type Minnesota prior or BVHAR-L.</p>
+<p><code>set_weight_bvhar(sigma, lambda, eps, daily, weekly, monthly)</code>
+defines BVHAR-L.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>daily <span class="ot">&lt;-</span> <span class="fu">rep</span>(.<span class="dv">1</span>, m)</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>weekly <span class="ot">&lt;-</span> <span class="fu">rep</span>(.<span class="dv">1</span>, m)</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>monthly <span class="ot">&lt;-</span> <span class="fu">rep</span>(.<span class="dv">1</span>, m)</span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>(bvhar_spec_v2 <span class="ot">&lt;-</span> <span class="fu">set_weight_bvhar</span>(sig, lam, eps, daily, weekly, monthly))</span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a><span class="co">#&gt; Model Specification for BVHAR</span></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a><span class="co">#&gt; Parameters: Coefficent matrice and Covariance matrix</span></span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a><span class="co">#&gt; Prior: MN_VHAR</span></span>
+<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a><span class="co">#&gt; # Type &#39;?bvhar_minnesota&#39; in the console for some help.</span></span>
+<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a><span class="co">#&gt; ========================================================</span></span>
+<span id="cb18-11"><a href="#cb18-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-12"><a href="#cb18-12" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;sigma&#39;:</span></span>
+<span id="cb18-13"><a href="#cb18-13" tabindex="-1"></a><span class="co">#&gt;   GVZCLS    OVXCLS    EVZCLS  VXFXICLS  </span></span>
+<span id="cb18-14"><a href="#cb18-14" tabindex="-1"></a><span class="co">#&gt;     3.77     10.63      2.27      3.81  </span></span>
+<span id="cb18-15"><a href="#cb18-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-16"><a href="#cb18-16" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;lambda&#39;:</span></span>
+<span id="cb18-17"><a href="#cb18-17" tabindex="-1"></a><span class="co">#&gt; [1]  0.2</span></span>
+<span id="cb18-18"><a href="#cb18-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-19"><a href="#cb18-19" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;eps&#39;:</span></span>
+<span id="cb18-20"><a href="#cb18-20" tabindex="-1"></a><span class="co">#&gt; [1]  1e-04</span></span>
+<span id="cb18-21"><a href="#cb18-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-22"><a href="#cb18-22" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;daily&#39;:</span></span>
+<span id="cb18-23"><a href="#cb18-23" tabindex="-1"></a><span class="co">#&gt; [1]  0.1  0.1  0.1  0.1</span></span>
+<span id="cb18-24"><a href="#cb18-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-25"><a href="#cb18-25" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;weekly&#39;:</span></span>
+<span id="cb18-26"><a href="#cb18-26" tabindex="-1"></a><span class="co">#&gt; [1]  0.1  0.1  0.1  0.1</span></span>
+<span id="cb18-27"><a href="#cb18-27" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-28"><a href="#cb18-28" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;monthly&#39;:</span></span>
+<span id="cb18-29"><a href="#cb18-29" tabindex="-1"></a><span class="co">#&gt; [1]  0.1  0.1  0.1  0.1</span></span></code></pre></div>
+<p><code>bayes_spec</code> option of <code>bvhar_minnesota()</code> gets
+this value, so you can use this prior intuitively.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>fit_bvhar_v2 <span class="ot">&lt;-</span> <span class="fu">bvhar_minnesota</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>  etf_train, </span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="at">bayes_spec =</span> bvhar_spec_v2</span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>)</span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>fit_bvhar_v2</span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a><span class="co">#&gt; bvhar_minnesota(y = etf_train, bayes_spec = bvhar_spec_v2)</span></span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a><span class="co">#&gt; BVHAR with Minnesota Prior</span></span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-12"><a href="#cb19-12" tabindex="-1"></a><span class="co">#&gt; Phi ~ Matrix Normal (Mean, Scale 1, Scale 2 = Sigma)</span></span>
+<span id="cb19-13"><a href="#cb19-13" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb19-14"><a href="#cb19-14" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for day:</span></span>
+<span id="cb19-15"><a href="#cb19-15" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_day  OVXCLS_day  EVZCLS_day  VXFXICLS_day</span></span>
+<span id="cb19-16"><a href="#cb19-16" tabindex="-1"></a><span class="co">#&gt; GVZCLS        0.7780     0.00503      0.0605        0.0183</span></span>
+<span id="cb19-17"><a href="#cb19-17" tabindex="-1"></a><span class="co">#&gt; OVXCLS        0.0435     0.74834      0.1234       -0.0110</span></span>
+<span id="cb19-18"><a href="#cb19-18" tabindex="-1"></a><span class="co">#&gt; EVZCLS        0.0112     0.00947      0.7218        0.0211</span></span>
+<span id="cb19-19"><a href="#cb19-19" tabindex="-1"></a><span class="co">#&gt; VXFXICLS      0.0253     0.00363      0.0997        0.8021</span></span>
+<span id="cb19-20"><a href="#cb19-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-21"><a href="#cb19-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-22"><a href="#cb19-22" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for week:</span></span>
+<span id="cb19-23"><a href="#cb19-23" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_week  OVXCLS_week  EVZCLS_week  VXFXICLS_week</span></span>
+<span id="cb19-24"><a href="#cb19-24" tabindex="-1"></a><span class="co">#&gt; GVZCLS         0.1180    -0.007746     -0.03245       -0.00215</span></span>
+<span id="cb19-25"><a href="#cb19-25" tabindex="-1"></a><span class="co">#&gt; OVXCLS        -0.0213     0.155999      0.02539       -0.00152</span></span>
+<span id="cb19-26"><a href="#cb19-26" tabindex="-1"></a><span class="co">#&gt; EVZCLS        -0.0104    -0.000477      0.13525       -0.00186</span></span>
+<span id="cb19-27"><a href="#cb19-27" tabindex="-1"></a><span class="co">#&gt; VXFXICLS      -0.0182    -0.010424      0.00136        0.10491</span></span>
+<span id="cb19-28"><a href="#cb19-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-29"><a href="#cb19-29" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-30"><a href="#cb19-30" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for month:</span></span>
+<span id="cb19-31"><a href="#cb19-31" tabindex="-1"></a><span class="co">#&gt;           GVZCLS_month  OVXCLS_month  EVZCLS_month  VXFXICLS_month</span></span>
+<span id="cb19-32"><a href="#cb19-32" tabindex="-1"></a><span class="co">#&gt; GVZCLS         0.05510      -0.00346      -0.01138        -0.00359</span></span>
+<span id="cb19-33"><a href="#cb19-33" tabindex="-1"></a><span class="co">#&gt; OVXCLS         0.00473       0.05518      -0.02463        -0.01064</span></span>
+<span id="cb19-34"><a href="#cb19-34" tabindex="-1"></a><span class="co">#&gt; EVZCLS        -0.00451       0.00393       0.05338        -0.00178</span></span>
+<span id="cb19-35"><a href="#cb19-35" tabindex="-1"></a><span class="co">#&gt; VXFXICLS       0.00681      -0.00319       0.00994         0.00823</span></span>
+<span id="cb19-36"><a href="#cb19-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-37"><a href="#cb19-37" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-38"><a href="#cb19-38" tabindex="-1"></a><span class="co">#&gt; Matrix Normal Mean for constant part:</span></span>
+<span id="cb19-39"><a href="#cb19-39" tabindex="-1"></a><span class="co">#&gt;   GVZCLS    OVXCLS    EVZCLS  VXFXICLS  </span></span>
+<span id="cb19-40"><a href="#cb19-40" tabindex="-1"></a><span class="co">#&gt;   0.5989    0.1195    0.0759    1.1240  </span></span>
+<span id="cb19-41"><a href="#cb19-41" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-42"><a href="#cb19-42" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-43"><a href="#cb19-43" tabindex="-1"></a><span class="co">#&gt; dim(Matrix Normal precision matrix):</span></span>
+<span id="cb19-44"><a href="#cb19-44" tabindex="-1"></a><span class="co">#&gt; [1]  13  13</span></span>
+<span id="cb19-45"><a href="#cb19-45" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-46"><a href="#cb19-46" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-47"><a href="#cb19-47" tabindex="-1"></a><span class="co">#&gt; Sigma ~ Inverse-Wishart</span></span>
+<span id="cb19-48"><a href="#cb19-48" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb19-49"><a href="#cb19-49" tabindex="-1"></a><span class="co">#&gt; IW scale matrix:</span></span>
+<span id="cb19-50"><a href="#cb19-50" tabindex="-1"></a><span class="co">#&gt;           GVZCLS  OVXCLS  EVZCLS  VXFXICLS</span></span>
+<span id="cb19-51"><a href="#cb19-51" tabindex="-1"></a><span class="co">#&gt; GVZCLS      1252     367     114       286</span></span>
+<span id="cb19-52"><a href="#cb19-52" tabindex="-1"></a><span class="co">#&gt; OVXCLS       367    3607     130       380</span></span>
+<span id="cb19-53"><a href="#cb19-53" tabindex="-1"></a><span class="co">#&gt; EVZCLS       114     130     214       121</span></span>
+<span id="cb19-54"><a href="#cb19-54" tabindex="-1"></a><span class="co">#&gt; VXFXICLS     286     380     121      1174</span></span></code></pre></div>
+</div>
+</div>
+<div id="inference" class="section level2">
+<h2>Inference</h2>
+<p><code>summary()</code> method for <code>normaliw</code> object
+performs MCMC based on conjugate MNIW distribution.</p>
+<!-- object, num_iter = 10000L, num_burn = floor(num_iter / 2), thinning = 1L, ... -->
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>(inf_bvar <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit_bvar, <span class="at">num_iter =</span> <span class="dv">10000</span>, <span class="at">num_burn =</span> <span class="dv">5000</span>))</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="co">#&gt; bvar_minnesota(y = etf_train, p = bvar_lag, bayes_spec = bvar_spec)</span></span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a><span class="co">#&gt; BVAR(5) with Minnesota Prior</span></span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a><span class="co">#&gt; Phi ~ Matrix Normal (Mean, Precision, Scale = Sigma)</span></span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a><span class="co">#&gt; Sigma ~ Inverse-Wishart (IW Scale, IW df)</span></span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a><span class="co">#&gt; Conjugate MCMC:</span></span>
+<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a><span class="co">#&gt; Total number of iteration: 10000</span></span>
+<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a><span class="co">#&gt; Number of burn-in: 5000</span></span>
+<span id="cb20-15"><a href="#cb20-15" tabindex="-1"></a><span class="co">#&gt; ====================================================</span></span>
+<span id="cb20-16"><a href="#cb20-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-17"><a href="#cb20-17" tabindex="-1"></a><span class="co">#&gt; Parameter record:</span></span>
+<span id="cb20-18"><a href="#cb20-18" tabindex="-1"></a><span class="co">#&gt; # A draws_df: 5000 iterations, 1 chains, and 94 variables</span></span>
+<span id="cb20-19"><a href="#cb20-19" tabindex="-1"></a><span class="co">#&gt;     alpha[1]  alpha[2]  alpha[3]  alpha[4]  alpha[5]  alpha[6]  alpha[7]</span></span>
+<span id="cb20-20"><a href="#cb20-20" tabindex="-1"></a><span class="co">#&gt; 1      0.783   0.00625   0.11634  -0.00343    0.1513  -0.01813   -0.0601</span></span>
+<span id="cb20-21"><a href="#cb20-21" tabindex="-1"></a><span class="co">#&gt; 2      0.787   0.02897   0.02772   0.03396    0.0774  -0.02233    0.0272</span></span>
+<span id="cb20-22"><a href="#cb20-22" tabindex="-1"></a><span class="co">#&gt; 3      0.794   0.01285   0.03751  -0.00183    0.0657  -0.01327    0.0510</span></span>
+<span id="cb20-23"><a href="#cb20-23" tabindex="-1"></a><span class="co">#&gt; 4      0.724  -0.01798   0.00808   0.00668    0.1172   0.00246   -0.0156</span></span>
+<span id="cb20-24"><a href="#cb20-24" tabindex="-1"></a><span class="co">#&gt; 5      0.763   0.02823   0.06641   0.00346    0.1169  -0.02269   -0.0308</span></span>
+<span id="cb20-25"><a href="#cb20-25" tabindex="-1"></a><span class="co">#&gt; 6      0.769   0.01203  -0.04510   0.05070    0.0931  -0.00625    0.0391</span></span>
+<span id="cb20-26"><a href="#cb20-26" tabindex="-1"></a><span class="co">#&gt; 7      0.792   0.00120   0.11668  -0.03210    0.0973  -0.01012   -0.0333</span></span>
+<span id="cb20-27"><a href="#cb20-27" tabindex="-1"></a><span class="co">#&gt; 8      0.795   0.01240   0.02669   0.01634    0.0662  -0.00731   -0.0463</span></span>
+<span id="cb20-28"><a href="#cb20-28" tabindex="-1"></a><span class="co">#&gt; 9      0.782   0.00321   0.06715   0.05024    0.1036  -0.01496    0.0379</span></span>
+<span id="cb20-29"><a href="#cb20-29" tabindex="-1"></a><span class="co">#&gt; 10     0.750   0.00615   0.20155   0.03737    0.1042  -0.01065    0.0171</span></span>
+<span id="cb20-30"><a href="#cb20-30" tabindex="-1"></a><span class="co">#&gt;     alpha[8]</span></span>
+<span id="cb20-31"><a href="#cb20-31" tabindex="-1"></a><span class="co">#&gt; 1   -0.01396</span></span>
+<span id="cb20-32"><a href="#cb20-32" tabindex="-1"></a><span class="co">#&gt; 2   -0.01491</span></span>
+<span id="cb20-33"><a href="#cb20-33" tabindex="-1"></a><span class="co">#&gt; 3    0.02996</span></span>
+<span id="cb20-34"><a href="#cb20-34" tabindex="-1"></a><span class="co">#&gt; 4    0.02325</span></span>
+<span id="cb20-35"><a href="#cb20-35" tabindex="-1"></a><span class="co">#&gt; 5    0.01855</span></span>
+<span id="cb20-36"><a href="#cb20-36" tabindex="-1"></a><span class="co">#&gt; 6   -0.00441</span></span>
+<span id="cb20-37"><a href="#cb20-37" tabindex="-1"></a><span class="co">#&gt; 7    0.04052</span></span>
+<span id="cb20-38"><a href="#cb20-38" tabindex="-1"></a><span class="co">#&gt; 8    0.06386</span></span>
+<span id="cb20-39"><a href="#cb20-39" tabindex="-1"></a><span class="co">#&gt; 9   -0.05489</span></span>
+<span id="cb20-40"><a href="#cb20-40" tabindex="-1"></a><span class="co">#&gt; 10  -0.04984</span></span>
+<span id="cb20-41"><a href="#cb20-41" tabindex="-1"></a><span class="co">#&gt; # ... with 4990 more draws, and 86 more variables</span></span>
+<span id="cb20-42"><a href="#cb20-42" tabindex="-1"></a><span class="co">#&gt; # ... hidden reserved variables {&#39;.chain&#39;, &#39;.iteration&#39;, &#39;.draw&#39;}</span></span></code></pre></div>
+<p><code>autoplot()</code> gives several Bayes visualization based on
+<code>bayesplot</code> package.</p>
+<ul>
+<li><code>type = &quot;trace&quot;</code></li>
+<li><code>type = &quot;dens&quot;</code></li>
+<li><code>type = &quot;area&quot;</code></li>
+</ul>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">autoplot</span>(inf_bvar, <span class="at">type =</span> <span class="st">&quot;trace&quot;</span>, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">&quot;alpha[1]&quot;</span>, <span class="st">&quot;alpha[2]&quot;</span>))</span></code></pre></div>
+<p><img src="data:image/png;base64,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rgrl68MPP7TzpkyZ4mI3YsQI9uMf/5iNGjWK7d6921VGCUKAECgeBDp16sQ6d+7MZsyY4dvpZs2ascaNG7NJkyb50soE+BBEW1dddZX9izHruuuusz/amjZtym6++Wb2u9/9zq6GcfAHP/gB27JlC/vss89kVpTOEQQa54gcJEYOI9CqVSvWvHlzIwmPO+44hsEgbGjSpIlTFcrXhRdeyM4991yGwUYO+NKK0pbMj9KEACGQnwhAMTEJDRo0YF26dDEhVdKI4w0+yh555BHWp08fmxazQs899xy7//77WUlJiZ3XokULhjYp5CYCpADl5nWpF6kwazNz5ky2efNmVldXx2666SZ7OlcWZs2aNfaM0Le//W32+uuvs71797Jbb73V/iritEeOHGFvvfUWW7BggT0tjS8ihPXr17MVK1awhQsXssGDB9vKDa+j+6UBRIcM5RMCxYWAyfiBmWPMBu3Zs4d17NiRvfvuu+z4449nN954o71MxRHDUhaWrzCzfdtttznL6JixqaioYIsXL2Y33HCDa1zjdfF71lln2UthPG/48OH2eIgZJgr5gQAtgeXHdcqKlPfccw/btm0bGzlyJPv8888Z1rzlACUJ692Y6n355ZftgWX69OnsmmuucZGiLr5+oEhhKhgBdbF0dfbZZ7Of//zn7D/+4z9o+cqFGiUIAUJAh4Dp+LFu3ToG09bf//73bOXKlbbt4kMPPcQef/xxhzV4YfyCXSHsemB/iDBx4kTbluiyyy5j+Gi7/fbbnTpyBDM+YsCH4Xe+8x2a8RFByfE4qao5foGyKR6WmoYMGcK+/PJLe8kLszRygLExlBgYHd511132w37SSSfZMzkYeHr16mVXufrqq9l5553HTjnlFNtOZ+fOnQxLaT/72c9Y69atbWUIy2oweh46dKjcDKUJAUKAEHAhgCVxk/EDS1JnnHEG279/P/vRj35k84Dx87hx49gvfvELO41Zml/96ld2fMmSJWzChAl2HMtjmPlGgL0QjJlNAmad3nnnHduO0YSeaHIDAVKAcuM65IQUMO7DDgnY1mDmBstYuoBlKb40BQUIU81YPuMKEC/DLBACdnlhFxna+Otf/2rvJsOAhoGJAiFACBACfghAIQkyfmB84WHYsGHsf//3f+3lLp7Hf/FRh/EJ4dRTT7UVp7/97W+2sTTP57S630cffZQ9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" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

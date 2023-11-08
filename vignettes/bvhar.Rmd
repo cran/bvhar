@@ -1,0 +1,429 @@
+---
+title: "Introduction to bvhar"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to bvhar}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  \newcommand{\R}{\mathbb{R}}
+  \newcommand{\B}{\boldsymbol\beta}
+  \newcommand{\hb}{\boldsymbol{\hat\beta}}
+  \newcommand{\E}{\boldsymbol\epsilon}
+  \DeclareMathOperator*{\argmin}{argmin}
+  \DeclareMathOperator*{\argmax}{argmax}
+  \newcommand{\X}{\mathbf{X}}
+  \newcommand{\Y}{\mathbf{Y}}
+  \newcommand{\by}{\mathbf{y}}
+  \newcommand{\bz}{\mathbf{Z}}
+  \newcommand{\ba}{\boldsymbol{\alpha}}
+  \newcommand{\bc}{\mathbf{c}}
+  \newcommand{\bu}{\mathbf{u}}
+  \def\Cov{\mathrm{Cov}}
+  \def\Var{\mathrm{Var}}
+  \def\Corr{\mathrm{Corr}}
+  \def\vec{\mathrm{vec}}
+  \newcommand{\defn}{\mathpunct{:}=}
+---
+
+```{r rmdsetup, include = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  out.width = "70%",
+  fig.align = "center",
+  fig.width = 6,
+  fig.asp = .618
+  )
+orig_opts <- options("digits")
+options(digits = 3)
+```
+
+```{r setup}
+library(bvhar)
+```
+
+# Data
+
+Looking at VAR and VHAR, you can learn how the models work and how to perform this package.
+
+## ETF Dataset
+
+This package includes some datasets.
+Among them, we try CBOE ETF volatility index (`etf_vix`).
+Since this is just an example, we arbitrarily extract a small number of variables: *Gold, crude oil, euro currency, and china ETF*.
+
+```{r etfdat}
+var_idx <- c("GVZCLS", "OVXCLS", "EVZCLS", "VXFXICLS")
+etf <- 
+  etf_vix %>% 
+  dplyr::select(dplyr::all_of(var_idx))
+etf
+```
+
+## h-step ahead forecasting
+
+For evaluation, split the data.
+The last `19` observations will be test set.
+`divide_ts()` function splits the time series into train-test set.
+
+In the other vignette, we provide how to perform out-of-sample forecasting.
+
+```{r hstepsplit}
+h <- 19
+etf_eval <- divide_ts(etf, h) # Try ?divide_ts
+etf_train <- etf_eval$train # train
+etf_test <- etf_eval$test # test
+# dimension---------
+m <- ncol(etf)
+```
+
+- T: Total number of observation
+- p: VAR lag
+- m: Dimension of variable
+- s = T - p
+- k = m * p + 1 if constant term, k = m * p without constant term
+
+# Models
+
+## VAR
+
+This package indentifies VAR(p) model by
+
+$$\Y_t = \bc + \B_1 \Y_{t - 1} + \ldots + \B_p +\Y_{t - p} + \E_t$$
+
+where $\E_t \sim N(\mathbf{0}_k, \Sigma_e)$
+
+```{r varlag}
+var_lag <- 5
+```
+
+The package perform VAR(p = `r var_lag`) based on
+
+$$Y_0 = X_0 A + Z$$
+
+where
+
+$$
+Y_0 = \begin{bmatrix}
+  \by_{p + 1}^T \\
+  \by_{p + 2}^T \\
+  \vdots \\
+  \by_n^T
+\end{bmatrix}_{s \times m} \equiv Y_{p + 1} \in \R^{s \times m}
+$$
+
+by `build_y0()`
+
+and
+
+$$
+X_0 = \left[\begin{array}{c|c|c|c}
+  \by_p^T & \cdots & \by_1^T & 1 \\
+  \by_{p + 1}^T & \cdots & \by_2^T & 1 \\
+  \vdots & \vdots & \cdots & \vdots \\
+  \by_{T - 1}^T & \cdots & \by_{T - p}^T & 1
+\end{array}\right]_{s \times k} = \begin{bmatrix}
+  Y_p & Y_{p - 1} & \cdots & \mathbf{1}_{T - p}
+\end{bmatrix} \in \R^{s \times k}
+$$
+
+by `build_design()`. Coefficient matrix is the form of
+
+$$
+A = \begin{bmatrix}
+  A_1^T \\
+  \vdots \\
+  A_p^T \\
+  \bc^T
+\end{bmatrix} \in \R^{k \times m}
+$$
+
+This form also corresponds to the other model.
+Use `var_lm(y, p)` to model VAR(p).
+You can specify `type = "none"` to get model without constant term.
+
+```{r varfit}
+(fit_var <- var_lm(etf_train, var_lag))
+```
+
+The package provide `S3` object.
+
+```{r varlist}
+# class---------------
+class(fit_var)
+# inheritance---------
+is.varlse(fit_var)
+# names---------------
+names(fit_var)
+```
+
+## VHAR
+
+Consider Vector HAR (VHAR) model.
+
+$$\Y_t = \bc + \Phi^{(d)} + \Y_{t - 1} + \Phi^{(w)} \Y_{t - 1}^{(w)} + \Phi^{(m)} \Y_{t - 1}^{(m)} + \E_t$$
+
+where $\Y_t$ is daily RV and
+
+$$\Y_t^{(w)} = \frac{1}{5} \left( \Y_t + \cdots + \Y_{t - 4} \right)$$
+
+is weekly RV
+
+and
+
+$$\Y_t^{(m)} = \frac{1}{22} \left( \Y_t + \cdots + \Y_{t - 21} \right)$$
+
+is monthly RV. This model can be expressed by
+
+$$Y_0 = X_1 \Phi + Z$$
+
+where
+
+$$
+\Phi = \begin{bmatrix}
+  \Phi^{(d)T} \\
+  \Phi^{(w)T} \\
+  \Phi^{(m)T} \\
+  \bc^T
+\end{bmatrix} \in \R^{(3m + 1) \times m}
+$$
+
+Let $T$ be
+
+$$
+\mathbb{C}_0 \defn \begin{bmatrix}
+  1 & 0 & \cdots & 0 & 0 & \cdots & 0 \\
+  1 / 5 & 1 / 5 & \cdots & 1 / 5 & 0 & \cdots & 0 \\
+  1 / 22 & 1 / 22 & \cdots & 1 / 22 & 1 / 22 & \cdots & 1 / 22
+\end{bmatrix} \otimes I_m \in \R^{3m \times 22m}
+$$
+
+and let $\mathbb{C}_{HAR}$ be
+
+$$
+\mathbb{C}_{HAR} \defn \left[\begin{array}{c|c}
+  T & \mathbf{0}_{3m} \\ \hline
+  \mathbf{0}_{3m}^T & 1
+\end{array}\right] \in \R^{(3m + 1) \times (22m + 1)}
+$$
+
+Then for $X_0$ in VAR(p),
+
+$$
+X_1 = X_0 \mathbb{C}_{HAR}^T = \begin{bmatrix}
+  \by_{22}^T & \by_{22}^{(w)T} & \by_{22}^{(m)T} & 1 \\
+  \by_{23}^T & \by_{23}^{(w)T} & \by_{23}^{(m)T} & 1 \\
+  \vdots & \vdots & \vdots & \vdots \\
+  \by_{T - 1}^T & \by_{T - 1}^{(w)T} & \by_{T - 1}^{(m)T} & 1
+\end{bmatrix} \in \R^{s \times (3m + 1)}
+$$
+
+This package fits VHAR by scaling VAR(p) using $\mathbb{C}_{HAR}$ (`scale_har(m, week = 5, month = 22)`).
+Use `vhar_lm(y)` to fit VHAR.
+You can specify `type = "none"` to get model without constant term.
+
+```{r harfit}
+(fit_har <- vhar_lm(etf_train))
+```
+
+```{r harlist}
+# class----------------
+class(fit_har)
+# inheritance----------
+is.varlse(fit_har)
+is.vharlse(fit_har)
+# complements----------
+names(fit_har)
+```
+
+## BVAR
+
+`bvhar` package provides two prior framework - Minnesota prior and flat prior.
+
+### Minnesota prior
+
+- Litterman (1986) and Bańbura et al. (2010)
+- All the equations are centered around the random walk with drift.
+- *Prior mean*: Recent lags provide more reliable information than the more distant ones.
+- *Prior variance*: Own lags explain more of the variation of a given variable than the lags of other variables in the equation.
+
+First specify the prior using `set_bvar(sigma, lambda, delta, eps = 1e-04)`.
+
+```{r minnesotaset}
+bvar_lag <- 5
+sig <- apply(etf_train, 2, sd) # sigma vector
+lam <- .2 # lambda
+delta <- rep(0, m) # delta vector (0 vector since RV stationary)
+eps <- 1e-04 # very small number
+(bvar_spec <- set_bvar(sig, lam, delta, eps))
+```
+
+In turn, `bvar_minnesota(y, p, bayes_spec, include_mean = TRUE)` fits BVAR(p).
+
+- `y`: Multivariate time series data. It should be data frame or matrix, which means that every column is numeric. Each column indicates variable, i.e. it sould be wide format.
+- `p`: Order of BVAR
+- `bayes_spec`: Output of `set_bvar()`
+- `include_mean = TRUE`: By default, you include the constant term in the model.
+
+```{r bvarfit}
+(fit_bvar <- bvar_minnesota(etf_train, bvar_lag, bvar_spec))
+```
+
+It is `bvarmn` class. For Bayes computation, it also has other class such as `normaliw` and `bvharmod`.
+
+```{r bvarlist}
+# class---------------
+class(fit_bvar)
+# inheritance---------
+is.bvarmn(fit_bvar)
+# names---------------
+names(fit_bvar)
+```
+
+### Flat prior
+
+Ghosh et al. (2018) provides flat prior for covariance matrix, i.e. non-informative.
+Use `set_bvar_flat(U)`.
+
+```{r flatspec}
+(flat_spec <- set_bvar_flat(U = 5000 * diag(m * bvar_lag + 1))) # c * I
+```
+
+Then `bvar_flat(y, p, bayes_spec, include_mean = TRUE)`:
+
+```{r flatfit}
+(fit_ghosh <- bvar_flat(etf_train, bvar_lag, flat_spec))
+```
+
+```{r flatlist}
+# class---------------
+class(fit_ghosh)
+# inheritance---------
+is.bvarflat(fit_ghosh)
+# names---------------
+names(fit_ghosh)
+```
+
+## BVHAR
+
+Consider the VAR(22) form of VHAR.
+
+$$
+\begin{aligned}
+  \Y_t = \bc & + \left( \Phi^{(d)} + \frac{1}{5} \Phi^{(w)} + \frac{1}{22} \Phi^{(m)} \right) \Y_{t - 1} \\
+  & + \left( \frac{1}{5} \Phi^{(w)} + \frac{1}{22} \Phi^{(m)} \right) \Y_{t - 2} + \cdots \left( \frac{1}{5} \Phi^{(w)} + \frac{1}{22} \Phi^{(m)} \right) \Y_{t - 5} \\
+  & + \frac{1}{22} \Phi^{(m)} \Y_{t - 6} + \cdots + \frac{1}{22} \Phi^{(m)} \Y_{t - 22}
+\end{aligned}
+$$
+
+What does Minnesota prior mean in VHAR model?
+
+- All the equations are centered around $\Y_t + \bc + \Phi^{(d)} \Y_{t - 1} + \E_t$
+- RW form: shrink diagonal elements of $\Phi^{(d)}$ toward one
+    - $\Phi^{(w)}$ and $\Phi^{(m)}$ to zero
+- WN form: $\delta_i = 0$
+
+For more simplicity, write coefficient matrices by $\Phi^{(1)}, \Phi^{(2)}, \Phi^{(3)}$.
+If we apply the prior in the same way, Minnesota moment becomes
+
+$$
+E \left[ (\Phi^{(l)})_{ij} \right] = \begin{cases}
+  \delta_i & j = i, \; l = 1 \\
+  0 & o/w
+\end{cases} \quad \Var \left[ (\Phi^{(l)})_{ij} \right] = \begin{cases}
+  \frac{\lambda^2}{l^2} & j = i \\
+  \nu \frac{\lambda^2}{l^2} \frac{\sigma_i^2}{\sigma_j^2} & o/w
+\end{cases}
+$$
+
+We call this VAR-type Minnesota prior or BVHAR-S.
+
+### BVHAR-S
+
+`set_bvhar(sigma, lambda, delta, eps = 1e-04)` specifies VAR-type Minnesota prior.
+
+```{r bvharvarspec}
+(bvhar_spec_v1 <- set_bvhar(sig, lam, delta, eps))
+```
+
+`bvhar_minnesota(y, har = c(5, 22), bayes_spec, include_mean = TRUE)` can fit BVHAR with this prior.
+This is the default prior setting.
+
+```{r}
+(fit_bvhar_v1 <- bvhar_minnesota(etf_train, bayes_spec = bvhar_spec_v1))
+```
+
+This model is `bvharmn` class.
+
+```{r bvharlist}
+# class---------------
+class(fit_bvhar_v1)
+# inheritance---------
+is.bvharmn(fit_bvhar_v1)
+# names---------------
+names(fit_bvhar_v1)
+```
+
+### BVHAR-L
+
+Set $\delta_i$ for weekly and monthly coefficient matrices in above Minnesota moments:
+
+$$
+E \left[ (\Phi^{(l)})_{ij} \right] = \begin{cases}
+  d_i & j = i, \; l = 1 \\
+  w_i & j = i, \; l = 2 \\
+  m_i & j = i, \; l = 3
+\end{cases}
+$$
+
+i.e. instead of one `delta` vector, set three vector
+
+- `daily`
+- `weekly`
+- `monthly`
+
+This is called VHAR-type Minnesota prior or BVHAR-L.
+
+`set_weight_bvhar(sigma, lambda, eps, daily, weekly, monthly)` defines BVHAR-L.
+
+```{r}
+daily <- rep(.1, m)
+weekly <- rep(.1, m)
+monthly <- rep(.1, m)
+(bvhar_spec_v2 <- set_weight_bvhar(sig, lam, eps, daily, weekly, monthly))
+```
+
+`bayes_spec` option of `bvhar_minnesota()` gets this value, so you can use this prior intuitively.
+
+```{r}
+fit_bvhar_v2 <- bvhar_minnesota(
+  etf_train, 
+  bayes_spec = bvhar_spec_v2
+)
+fit_bvhar_v2
+```
+
+## Inference
+
+`summary()` method for `normaliw` object performs MCMC based on conjugate MNIW distribution.
+
+<!-- object, num_iter = 10000L, num_burn = floor(num_iter / 2), thinning = 1L, ... -->
+
+```{r conjmcmc}
+(inf_bvar <- summary(fit_bvar, num_iter = 10000, num_burn = 5000))
+```
+
+`autoplot()` gives several Bayes visualization based on `bayesplot` package.
+
+- `type = "trace"`
+- `type = "dens"`
+- `type = "area"`
+
+```{r mctrace}
+autoplot(inf_bvar, type = "trace", pars = c("alpha[1]", "alpha[2]"))
+```
+
+```{r resetopts, include=FALSE}
+options(orig_opts)
+```
+
