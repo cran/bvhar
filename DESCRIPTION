@@ -1,7 +1,7 @@
 Package: bvhar
 Type: Package
 Title: Bayesian Vector Heterogeneous Autoregressive Modeling
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: 
     c(person(given = "Young Geun",
              family = "Kim",
@@ -14,7 +14,7 @@ Authors@R:
 Description: Tools to research Bayesian Vector heterogeneous autoregressive (VHAR) model,
     referring to Kim & Baek (2023+) (<doi:10.1080/00949655.2023.2281644>).
     'bvhar' can model Vector Autoregressive (VAR), VHAR, Bayesian VAR (BVAR), and Bayesian VHAR (BVHAR) models.
-License: MIT + file LICENSE
+License: GPL (>= 3)
 URL: https://ygeunkim.github.io/package/bvhar/,
         https://github.com/ygeunkim/bvhar
 BugReports: https://github.com/ygeunkim/bvhar/issues
@@ -30,10 +30,10 @@ VignetteBuilder: knitr
 Depends: R (>= 3.6.0)
 Config/testthat/edition: 3
 NeedsCompilation: yes
-Packaged: 2023-11-10 03:10:13 UTC; ygeunmini
+Packaged: 2023-12-06 10:49:24 UTC; ygeunbook
 Author: Young Geun Kim [aut, cre, cph]
     (<https://orcid.org/0000-0001-8651-1167>),
   Changryong Baek [ctb]
 Maintainer: Young Geun Kim <dudrms33@g.skku.edu>
 Repository: CRAN
-Date/Publication: 2023-11-10 20:13:17 UTC
+Date/Publication: 2023-12-06 11:20:02 UTC
