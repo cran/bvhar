@@ -26,7 +26,7 @@ etf_train <- etf_eval$train
 etf_test <- etf_eval$test
 
 ## ----fitssvs------------------------------------------------------------------
-(fit_ssvs <- bvhar_ssvs(etf_train, num_iter = 500, include_mean = FALSE, minnesota = "longrun"))
+(fit_ssvs <- bvhar_ssvs(etf_train, num_iter = 50, include_mean = FALSE, minnesota = "longrun"))
 
 ## ----heatssvs-----------------------------------------------------------------
 autoplot(fit_ssvs)
@@ -35,7 +35,7 @@ autoplot(fit_ssvs)
 autoplot(fit_ssvs, type = "trace", regex_pars = "psi")
 
 ## ----fiths--------------------------------------------------------------------
-(fit_hs <- bvhar_horseshoe(etf_train, num_iter = 1000, include_mean = FALSE, minnesota = "longrun", verbose = TRUE))
+(fit_hs <- bvhar_horseshoe(etf_train, num_iter = 50, include_mean = FALSE, minnesota = "longrun", verbose = TRUE))
 
 ## ----heaths-------------------------------------------------------------------
 autoplot(fit_hs)
@@ -44,13 +44,13 @@ autoplot(fit_hs)
 autoplot(fit_hs, type = "dens", regex_pars = "tau")
 
 ## ----svssvs-------------------------------------------------------------------
-(fit_ssvs_sv <- bvhar_sv(etf_train, num_iter = 500, bayes_spec = set_ssvs(), include_mean = FALSE, minnesota = "longrun"))
+(fit_ssvs_sv <- bvhar_sv(etf_train, num_iter = 50, bayes_spec = set_ssvs(), include_mean = FALSE, minnesota = "longrun"))
 
 ## ----heatssvssv---------------------------------------------------------------
 autoplot(fit_ssvs_sv)
 
 ## -----------------------------------------------------------------------------
-(fit_hs_sv <- bvhar_sv(etf_train, num_iter = 500, bayes_spec = set_horseshoe(), include_mean = FALSE, minnesota = "longrun"))
+(fit_hs_sv <- bvhar_sv(etf_train, num_iter = 50, bayes_spec = set_horseshoe(), include_mean = FALSE, minnesota = "longrun"))
 
 ## ----heathssv-----------------------------------------------------------------
 autoplot(fit_hs_sv)
