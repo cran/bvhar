@@ -15,10 +15,7 @@ set.seed(1)
 library(bvhar)
 
 ## ----etfdat-------------------------------------------------------------------
-var_idx <- c("GVZCLS", "OVXCLS", "EVZCLS", "VXFXICLS")
-etf <-
-  etf_vix[1:100, ] %>%
-  dplyr::select(dplyr::all_of(var_idx))
+etf <- etf_vix[1:100, 1:3]
 # Split-------------------------------
 h <- 5
 etf_eval <- divide_ts(etf, h)
@@ -26,34 +23,31 @@ etf_train <- etf_eval$train
 etf_test <- etf_eval$test
 
 ## ----fitssvs------------------------------------------------------------------
-(fit_ssvs <- bvhar_ssvs(etf_train, num_iter = 50, include_mean = FALSE, minnesota = "longrun"))
+(fit_ssvs <- bvhar_ssvs(etf_train, num_chains = 1, num_iter = 20, include_mean = FALSE, minnesota = "longrun"))
 
 ## ----heatssvs-----------------------------------------------------------------
 autoplot(fit_ssvs)
 
-## -----------------------------------------------------------------------------
-autoplot(fit_ssvs, type = "trace", regex_pars = "psi")
-
 ## ----fiths--------------------------------------------------------------------
-(fit_hs <- bvhar_horseshoe(etf_train, num_iter = 50, include_mean = FALSE, minnesota = "longrun", verbose = TRUE))
+(fit_hs <- bvhar_horseshoe(etf_train, num_chains = 2, num_iter = 20, include_mean = FALSE, minnesota = "longrun"))
 
 ## ----heaths-------------------------------------------------------------------
 autoplot(fit_hs)
 
-## ----denshs-------------------------------------------------------------------
-autoplot(fit_hs, type = "dens", regex_pars = "tau")
-
 ## ----svssvs-------------------------------------------------------------------
-(fit_ssvs_sv <- bvhar_sv(etf_train, num_iter = 50, bayes_spec = set_ssvs(), include_mean = FALSE, minnesota = "longrun"))
+(fit_ssvs_sv <- bvhar_sv(etf_train, num_chains = 2, num_iter = 20, bayes_spec = set_ssvs(), sv_spec = set_sv(), include_mean = FALSE, minnesota = "longrun"))
 
 ## ----heatssvssv---------------------------------------------------------------
 autoplot(fit_ssvs_sv)
 
 ## -----------------------------------------------------------------------------
-(fit_hs_sv <- bvhar_sv(etf_train, num_iter = 50, bayes_spec = set_horseshoe(), include_mean = FALSE, minnesota = "longrun"))
+(fit_hs_sv <- bvhar_sv(etf_train, num_chains = 2, num_iter = 20, bayes_spec = set_horseshoe(), sv_spec = set_sv(), include_mean = FALSE, minnesota = "longrun"))
 
-## ----heathssv-----------------------------------------------------------------
-autoplot(fit_hs_sv)
+## -----------------------------------------------------------------------------
+autoplot(fit_hs_sv, type = "trace", regex_pars = "tau")
+
+## ----denshs-------------------------------------------------------------------
+autoplot(fit_hs_sv, type = "dens", regex_pars = "kappa", facet_args = list(dir = "v", nrow = nrow(fit_hs_sv$coefficients)))
 
 ## ----resetopts, include=FALSE-------------------------------------------------
 options(orig_opts)
