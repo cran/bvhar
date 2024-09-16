@@ -60,7 +60,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -365,7 +365,7 @@ matrix. For example, generating 3 vector from Normal(<span class="math inline">\
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; [2,] -0.836  1.595</span></span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; [3,]  0.330 -0.820</span></span></code></pre></div>
 <p>The output of <code>sim_matgaussian()</code> is a matrix.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">sim_matgaussian</span>(<span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">nrow =</span> <span class="dv">4</span>), <span class="fu">diag</span>(<span class="dv">4</span>), <span class="fu">diag</span>(<span class="dv">5</span>))</span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">sim_matgaussian</span>(<span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">nrow =</span> <span class="dv">4</span>), <span class="fu">diag</span>(<span class="dv">4</span>), <span class="fu">diag</span>(<span class="dv">5</span>), <span class="cn">FALSE</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]  [,3] [,4] [,5]</span></span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; [1,] 1.49 5.74  9.58 12.7 18.5</span></span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; [2,] 2.39 5.38  7.79 15.1 18.0</span></span>
@@ -384,31 +384,42 @@ it guarantees the existence of the mean.</p>
 <span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; [5,] -0.1305 -0.1015 -0.0988  0.2136  0.7444</span></span></code></pre></div>
 <p>In case of <code>sim_mniw()</code>, it returns list with
 <code>mn</code> (stacked MN matrices) and <code>iw</code> (stacked IW
-matrices):</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">sim_mniw</span>(<span class="dv">2</span>, <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">nrow =</span> <span class="dv">4</span>), <span class="fu">diag</span>(<span class="dv">4</span>), <span class="fu">diag</span>(<span class="dv">5</span>), <span class="dv">7</span>)</span>
+matrices). Each <code>mn</code> and <code>iw</code> has draw lists.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">sim_mniw</span>(<span class="dv">2</span>, <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">nrow =</span> <span class="dv">4</span>), <span class="fu">diag</span>(<span class="dv">4</span>), <span class="fu">diag</span>(<span class="dv">5</span>), <span class="dv">7</span>, <span class="cn">FALSE</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; $mn</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]  [,3] [,4] [,5]  [,6] [,7]  [,8] [,9] [,10]</span></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; [1,] 1.19 4.96  8.03 12.7 14.6 0.323 5.07  8.24 13.1  17.4</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; [2,] 2.13 5.17 10.41 14.1 19.3 2.022 5.56  9.96 13.9  19.4</span></span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; [3,] 3.01 7.15 10.29 14.9 18.1 3.380 7.24 11.34 15.5  17.9</span></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; [4,] 4.59 7.99 12.12 15.0 18.5 3.755 8.79 11.84 15.6  19.6</span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; $iw</span></span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt;         [,1]     [,2]     [,3]    [,4]   [,5]     [,6]    [,7]     [,8]    [,9]</span></span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; [1,]  0.2887 -0.04393  0.11892 -0.2959  0.110  0.28118 -0.1397  0.00529  0.0283</span></span>
-<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; [2,] -0.0439  0.33357  0.00197  0.0106 -0.167 -0.13965  0.2876  0.06156 -0.1575</span></span>
-<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; [3,]  0.1189  0.00197  1.30074 -0.0291  2.210  0.00529  0.0616  0.31282 -0.1372</span></span>
-<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; [4,] -0.2959  0.01061 -0.02913  0.5072  0.250  0.02831 -0.1575 -0.13724  0.3441</span></span>
-<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; [5,]  0.1104 -0.16736  2.20957  0.2504  4.623  0.03803 -0.1856 -0.29860  0.1217</span></span>
-<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt;       [,10]</span></span>
-<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; [1,]  0.038</span></span>
-<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; [2,] -0.186</span></span>
-<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; [3,] -0.299</span></span>
-<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; [4,]  0.122</span></span>
-<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; [5,]  0.738</span></span></code></pre></div>
-<p>Since each matrix is stacked rowwise, it is actually not that
-readable and practical. This function has been defined for the next
-simulation functions.</p>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; $mn[[1]]</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]  [,3] [,4] [,5]</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; [1,] 1.19 4.96  8.03 12.7 14.6</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; [2,] 2.13 5.17 10.41 14.1 19.3</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; [3,] 3.01 7.15 10.29 14.9 18.1</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; [4,] 4.59 7.99 12.12 15.0 18.5</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; $mn[[2]]</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt;       [,1] [,2]  [,3] [,4] [,5]</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; [1,] 0.323 5.07  8.24 13.1 17.4</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; [2,] 2.022 5.56  9.96 13.9 19.4</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; [3,] 3.380 7.24 11.34 15.5 17.9</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; [4,] 3.755 8.79 11.84 15.6 19.6</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; $iw</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; $iw[[1]]</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt;         [,1]     [,2]     [,3]    [,4]   [,5]</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; [1,]  0.2887 -0.04393  0.11892 -0.2959  0.110</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; [2,] -0.0439  0.33357  0.00197  0.0106 -0.167</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; [3,]  0.1189  0.00197  1.30074 -0.0291  2.210</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; [4,] -0.2959  0.01061 -0.02913  0.5072  0.250</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt; [5,]  0.1104 -0.16736  2.20957  0.2504  4.623</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt; $iw[[2]]</span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt;          [,1]    [,2]     [,3]    [,4]   [,5]</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt; [1,]  0.28118 -0.1397  0.00529  0.0283  0.038</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt; [2,] -0.13965  0.2876  0.06156 -0.1575 -0.186</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#&gt; [3,]  0.00529  0.0616  0.31282 -0.1372 -0.299</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt; [4,]  0.02831 -0.1575 -0.13724  0.3441  0.122</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt; [5,]  0.03803 -0.1856 -0.29860  0.1217  0.738</span></span></code></pre></div>
+<!-- Since each matrix is stacked rowwise, it is actually not that readable and practical. -->
+<p>This function has been defined for the next simulation functions.</p>
 </div>
 <div id="minnesota-prior" class="section level1">
 <h1>Minnesota Prior</h1>
@@ -472,20 +483,22 @@ overfitting (De Mol et al. (2008))</li>
 <span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt; Parameters: Coefficent matrice and Covariance matrix</span></span>
 <span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt; Prior: Minnesota</span></span>
-<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; # Type &#39;?bvar_minnesota&#39; in the console for some help.</span></span>
-<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; ========================================================</span></span>
-<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;sigma&#39;:</span></span>
-<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; [1]   3.25  11.10   2.20   6.80</span></span>
-<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;lambda&#39;:</span></span>
-<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt; [1]  0.2</span></span>
-<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;delta&#39;:</span></span>
-<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt; [1]  1  1  1  1</span></span>
-<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;eps&#39;:</span></span>
-<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co">#&gt; [1]  1e-04</span></span></code></pre></div>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; ========================================================</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;sigma&#39;:</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; [1]   3.25  11.10   2.20   6.80</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;lambda&#39;:</span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt; [1]  0.2</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;delta&#39;:</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; [1]  1  1  1  1</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;eps&#39;:</span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#&gt; [1]  1e-04</span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;hierarchical&#39;:</span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co">#&gt; [1]  FALSE</span></span></code></pre></div>
 <ul>
 <li><code>sim_mncoef(p, bayes_spec, full = TRUE)</code> can generate
 both <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span> matrices.</li>
@@ -497,10 +510,10 @@ both <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sig
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>(<span class="fu">sim_mncoef</span>(bvar_lag, spec_to_sim))</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt; $coefficients</span></span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt;            [,1]     [,2]      [,3]     [,4]</span></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt;  [1,]  0.196255 -0.19084 -0.026363  0.07600</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt;  [2,] -0.017158  0.27873 -0.033404 -0.00816</span></span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt;  [3,] -0.225869  0.31165  0.127705 -0.48148</span></span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt;  [4,] -0.002706 -0.26068  0.038566  0.04105</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt;  [1,]  0.996255 -0.19084 -0.026363  0.07600</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt;  [2,] -0.017158  1.07873 -0.033404 -0.00816</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt;  [3,] -0.225869  0.31165  0.927705 -0.48148</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt;  [4,] -0.002706 -0.26068  0.038566  0.84105</span></span>
 <span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt;  [5,] -0.023064 -0.11717 -0.030881  0.35496</span></span>
 <span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt;  [6,]  0.000253 -0.05523 -0.018351  0.03580</span></span>
 <span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt;  [7,] -0.001364 -0.06563 -0.051615 -0.33330</span></span>
@@ -554,25 +567,27 @@ model setting:</p>
 <span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; Parameters: Coefficent matrice and Covariance matrix</span></span>
 <span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt; Prior: MN_VAR</span></span>
-<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt; # Type &#39;?bvhar_minnesota&#39; in the console for some help.</span></span>
-<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt; ========================================================</span></span>
-<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;sigma&#39;:</span></span>
-<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; [1]  1.2  2.3</span></span>
-<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;lambda&#39;:</span></span>
-<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#&gt; [1]  0.2</span></span>
-<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;delta&#39;:</span></span>
-<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#&gt; [1]  0.3  1.0</span></span>
-<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;eps&#39;:</span></span>
-<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#&gt; [1]  1e-04</span></span></code></pre></div>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt; ========================================================</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;sigma&#39;:</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt; [1]  1.2  2.3</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;lambda&#39;:</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#&gt; [1]  0.2</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;delta&#39;:</span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#&gt; [1]  0.3  1.0</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;eps&#39;:</span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#&gt; [1]  1e-04</span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;hierarchical&#39;:</span></span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co">#&gt; [1]  FALSE</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>(<span class="fu">sim_mnvhar_coef</span>(bvhar_var_spec))</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt; $coefficients</span></span>
 <span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt;          [,1]    [,2]</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; [1,]  0.06349 -0.2954</span></span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; [2,] -0.01177  0.4277</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; [1,]  0.30349 -0.2954</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; [2,] -0.01177  1.2277</span></span>
 <span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; [3,]  0.05543 -0.2689</span></span>
 <span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; [4,]  0.00235  0.0574</span></span>
 <span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; [5,] -0.05121  0.1928</span></span>
@@ -597,35 +612,37 @@ model setting:</p>
 <span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt; Parameters: Coefficent matrice and Covariance matrix</span></span>
 <span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt; Prior: MN_VHAR</span></span>
-<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt; # Type &#39;?bvhar_minnesota&#39; in the console for some help.</span></span>
-<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; ========================================================</span></span>
-<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;sigma&#39;:</span></span>
-<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt; [1]  1.2  2.3</span></span>
-<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;lambda&#39;:</span></span>
-<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co">#&gt; [1]  0.2</span></span>
-<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;eps&#39;:</span></span>
-<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="co">#&gt; [1]  1e-04</span></span>
-<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;daily&#39;:</span></span>
-<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co">#&gt; [1]  0.5  1.0</span></span>
-<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;weekly&#39;:</span></span>
-<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt; [1]  0.2  0.3</span></span>
-<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;monthly&#39;:</span></span>
-<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="co">#&gt; [1]  0.1  0.1</span></span></code></pre></div>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt; ========================================================</span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;sigma&#39;:</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; [1]  1.2  2.3</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;lambda&#39;:</span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="co">#&gt; [1]  0.2</span></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;eps&#39;:</span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="co">#&gt; [1]  1e-04</span></span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;daily&#39;:</span></span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="co">#&gt; [1]  0.5  1.0</span></span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;weekly&#39;:</span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#&gt; [1]  0.2  0.3</span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;monthly&#39;:</span></span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="co">#&gt; [1]  0.1  0.1</span></span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="co">#&gt; Setting for &#39;hierarchical&#39;:</span></span>
+<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a><span class="co">#&gt; [1]  FALSE</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>(<span class="fu">sim_mnvhar_coef</span>(bvhar_vhar_spec))</span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="co">#&gt; $coefficients</span></span>
 <span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co">#&gt;          [,1]    [,2]</span></span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">#&gt; [1,] -0.01953  0.2058</span></span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt; [2,]  0.14585 -0.2401</span></span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt; [3,]  0.01613 -0.0491</span></span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#&gt; [4,]  0.05043 -0.1112</span></span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="co">#&gt; [5,]  0.02742  0.3732</span></span>
-<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt; [6,] -0.00569 -0.0749</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">#&gt; [1,]  0.38047  0.2058</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt; [2,]  0.14585  0.5599</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt; [3,]  0.09613 -0.0491</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#&gt; [4,]  0.05043  0.0088</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="co">#&gt; [5,]  0.05409  0.3732</span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt; [6,] -0.00569 -0.0482</span></span>
 <span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co">#&gt; $covmat</span></span>
 <span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt;       [,1]   [,2]</span></span>

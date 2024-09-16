@@ -6,7 +6,7 @@ knitr::opts_chunk$set(
   fig.align = "center",
   fig.width = 6,
   fig.asp = .618
-  )
+)
 orig_opts <- options("digits")
 options(digits = 3)
 set.seed(1)
@@ -18,13 +18,13 @@ library(bvhar)
 sim_mnormal(3, rep(0, 2), diag(2))
 
 ## ----genmatnorm---------------------------------------------------------------
-sim_matgaussian(matrix(1:20, nrow = 4), diag(4), diag(5))
+sim_matgaussian(matrix(1:20, nrow = 4), diag(4), diag(5), FALSE)
 
 ## ----geniw--------------------------------------------------------------------
 sim_iw(diag(5), 7)
 
 ## ----genmniw------------------------------------------------------------------
-sim_mniw(2, matrix(1:20, nrow = 4), diag(4), diag(5), 7)
+sim_mniw(2, matrix(1:20, nrow = 4), diag(4), diag(5), 7, FALSE)
 
 ## ----minnesotaset-------------------------------------------------------------
 bvar_lag <- 5

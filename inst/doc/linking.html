@@ -60,7 +60,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -348,10 +348,10 @@ these useful.</p>
 <ul>
 <li><code>bvharsim.h</code>: Rcpp random generation functions that are
 widely used in Bayesian statistics.</li>
-<li><code>ols.h</code>: OLS classes</li>
-<li><code>minnesota.h</code>: Minnesota prior classes</li>
-<li><code>mcmcsv.h</code>: Classes for stochastic volatility models. It
-includes
+<li><code>ols.h</code>: OLS classes and structs</li>
+<li><code>minnesota.h</code>: Minnesota prior classes and structs</li>
+<li><code>mcmcsv.h</code>: Classes and structs for stochastic volatility
+models. It includes
 <ul>
 <li>Minnesota prior</li>
 <li>SSVS prior</li>
@@ -359,6 +359,17 @@ includes
 </ul></li>
 <li><code>mcmchs.h</code>: Horseshoe prior classes</li>
 <li><code>mcmcssvs.h</code>: SSVS prior classes</li>
+<li><code>olsforecaster.h</code>: Forecasting class for each VAR and
+VHAR</li>
+<li><code>minnforecaster.h</code>: Minnesota prior forecaster
+classes</li>
+<li><code>svforecaster.h</code>: SV models forecaster classes</li>
+<li><code>olsspillover.h</code>: FEVD and spillover class for each VAR
+and VHAR</li>
+<li><code>minnspillover.h</code>: FEVD and spillover class for Minnesota
+prior</li>
+<li><code>svspillover.h</code>: FEVD and spillover class for SV
+models</li>
 <li><code>bvharprogress.h</code>: Simple progress bar classes</li>
 <li><code>bvharinterrupt.h</code>: Interruption handler classes</li>
 </ul>

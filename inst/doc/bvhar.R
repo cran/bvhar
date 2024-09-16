@@ -63,7 +63,7 @@ eps <- 1e-04 # very small number
 (bvar_spec <- set_bvar(sig, lam, delta, eps))
 
 ## ----bvarfit------------------------------------------------------------------
-(fit_bvar <- bvar_minnesota(etf_train, bvar_lag, bvar_spec))
+(fit_bvar <- bvar_minnesota(etf_train, bvar_lag, num_iter = 10, bayes_spec = bvar_spec))
 
 ## ----bvarlist-----------------------------------------------------------------
 # class---------------
@@ -77,7 +77,7 @@ names(fit_bvar)
 (flat_spec <- set_bvar_flat(U = 5000 * diag(m * bvar_lag + 1))) # c * I
 
 ## ----flatfit------------------------------------------------------------------
-(fit_ghosh <- bvar_flat(etf_train, bvar_lag, flat_spec))
+(fit_ghosh <- bvar_flat(etf_train, bvar_lag, num_iter = 10, bayes_spec = flat_spec))
 
 ## ----flatlist-----------------------------------------------------------------
 # class---------------
@@ -91,7 +91,7 @@ names(fit_ghosh)
 (bvhar_spec_v1 <- set_bvhar(sig, lam, delta, eps))
 
 ## -----------------------------------------------------------------------------
-(fit_bvhar_v1 <- bvhar_minnesota(etf_train, bayes_spec = bvhar_spec_v1))
+(fit_bvhar_v1 <- bvhar_minnesota(etf_train, num_iter = 10, bayes_spec = bvhar_spec_v1))
 
 ## ----bvharlist----------------------------------------------------------------
 # class---------------
@@ -109,16 +109,11 @@ monthly <- rep(.1, m)
 
 ## -----------------------------------------------------------------------------
 fit_bvhar_v2 <- bvhar_minnesota(
-  etf_train, 
+  etf_train,
+  num_iter = 10,
   bayes_spec = bvhar_spec_v2
 )
 fit_bvhar_v2
-
-## ----conjmcmc-----------------------------------------------------------------
-(inf_bvar <- summary(fit_bvar, num_iter = 10000, num_burn = 5000))
-
-## ----mctrace------------------------------------------------------------------
-autoplot(inf_bvar, type = "trace", pars = c("alpha[1]", "alpha[2]"))
 
 ## ----resetopts, include=FALSE-------------------------------------------------
 options(orig_opts)
