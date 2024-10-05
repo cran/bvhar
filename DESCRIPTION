@@ -1,7 +1,7 @@
 Package: bvhar
 Type: Package
 Title: Bayesian Vector Heterogeneous Autoregressive Modeling
-Version: 2.1.0
+Version: 2.1.1
 Authors@R: 
     c(person(given = "Young Geun",
              family = "Kim",
@@ -30,10 +30,10 @@ VignetteBuilder: knitr
 Depends: R (>= 3.6.0)
 Config/testthat/edition: 3
 NeedsCompilation: yes
-Packaged: 2024-09-16 07:45:28 UTC; ygeunbook
+Packaged: 2024-10-05 06:17:52 UTC; ygeunbook
 Author: Young Geun Kim [aut, cre, cph]
     (<https://orcid.org/0000-0001-8651-1167>),
   Changryong Baek [ctb]
 Maintainer: Young Geun Kim <ygeunkimstat@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-09-16 08:20:05 UTC
+Date/Publication: 2024-10-05 07:00:02 UTC

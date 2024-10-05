@@ -1,6 +1,6 @@
-5de67c6e50313d4bd53373e6dec40ceb *DESCRIPTION
+cb98240eec3b32eaa0d979754d8b6f3e *DESCRIPTION
 e001175a3ab9d882e36e2ce55c6469d7 *NAMESPACE
-294b51e6f0f068b70a17ecc94e77a1a3 *NEWS.md
+75392217f52537bbc4e7d962f9f34eeb *NEWS.md
 7402c7591560119553e62ff6d2c72f74 *R/RcppExports.R
 e3f071d40bde4328503c52994b8c6a0b *R/bvar-flat.R
 b9aa43b346bf8cbb8c00f23dde07562c *R/bvar-horseshoe.R
@@ -51,7 +51,7 @@ b56ff2b193ecba52f9ec7f3b10cca008 *R/utils-pipe.R
 72d9bfa58bb3f91805b6434fc62efd5e *R/vhar-bayes.R
 67b8d88871f1695275dae7f8cf806d16 *R/vharlse.R
 98ac48aee8274b8a279c4a8e9e099a6d *R/zzz.R
-0a509684947942e60c8477b2f89219d5 *README.md
+18b6f3d860cc7807f2e366e76157f555 *README.md
 20c8d3f97d93e2e318a22508275b5a02 *build/partial.rdb
 79e6be1fd37286a1e3999517868db7f6 *build/vignette.rds
 c3873698a5d39cb251a25af1a17df7cd *data/etf_vix.rda
@@ -81,9 +81,9 @@ cb53f4463f2bef6a2cc1a69a09485717 *inst/include/bvharcommon.h
 9489fada244b48094a13ab61c036e739 *inst/include/bvharinterrupt.h
 ef347d75a047a46d830a3a5abea6d211 *inst/include/bvharomp.h
 fc49bf17623f712af3445ebc6e1934d3 *inst/include/bvharprogress.h
-0ed56a8d38e3f1c1c84895815dcbd47f *inst/include/bvharsim.h
+51336d5748c93466b012e72f799d2b89 *inst/include/bvharsim.h
 5f89004bdfc8cf0ff92ab2138b8eb515 *inst/include/bvharstructural.h
-496a343d92596c486e99ddc331aee838 *inst/include/commondefs.h
+3ff124557857e88459829fbd210f8458 *inst/include/commondefs.h
 3b11ff52845475ded09914f6ba9a7fa0 *inst/include/mcmchs.h
 588cdddb21a78c27bad22ff5432e35a3 *inst/include/mcmcreg.h
 3efc686a01527dfafeeca060690ba990 *inst/include/mcmcssvs.h
