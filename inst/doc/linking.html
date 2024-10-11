@@ -380,7 +380,13 @@ models</li>
     RcppEigen,
     bvhar</code></pre>
 <p>Also, you can use in your single <code>C++</code> source:</p>
-<pre><code>// [[Rcpp::depends(BH, RcppEigen, bvhar)]]</code></pre>
+<pre><code>// [[Rcpp::depends(BH, RcppEigen, bvhar)]]
+// [[Rcpp::plugins(bvhar)]]</code></pre>
+<p>You need to add <code>plugins</code> attribute because the header in
+this package should define <code>USE_RCPP</code> macro. Or you can use
+instead:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">Sys.setenv</span>(<span class="st">&quot;PKG_CPPFLAGS&quot;</span> <span class="ot">=</span> <span class="st">&quot;-DUSE_RCPP&quot;</span>)</span></code></pre></div>
+<p>without using plugins attribute.</p>
 <div id="mcmc-headers" class="section level2">
 <h2>MCMC headers</h2>
 <p><code>mcmc*.h</code> has classes that can conduct MCMC. Since it is
