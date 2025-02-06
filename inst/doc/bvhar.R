@@ -16,7 +16,7 @@ library(bvhar)
 ## ----etfdat-------------------------------------------------------------------
 var_idx <- c("GVZCLS", "OVXCLS", "EVZCLS", "VXFXICLS")
 etf <- 
-  etf_vix %>% 
+  etf_vix |> 
   dplyr::select(dplyr::all_of(var_idx))
 etf
 

@@ -48,8 +48,9 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -60,7 +61,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -353,7 +354,7 @@ we arbitrarily extract a small number of variables: <em>Gold, crude oil,
 euro currency, and china ETF</em>.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>var_idx <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;GVZCLS&quot;</span>, <span class="st">&quot;OVXCLS&quot;</span>, <span class="st">&quot;EVZCLS&quot;</span>, <span class="st">&quot;VXFXICLS&quot;</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>etf <span class="ot">&lt;-</span> </span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  etf_vix <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  etf_vix <span class="sc">|&gt;</span> </span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(dplyr<span class="sc">::</span><span class="fu">all_of</span>(var_idx))</span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>etf</span>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; # A tibble: 905 × 4</span></span>

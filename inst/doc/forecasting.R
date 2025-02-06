@@ -16,8 +16,8 @@ library(bvhar)
 
 ## ----evalcoef, echo=FALSE-----------------------------------------------------
 etf_eval <- 
-  etf_vix %>% 
-  dplyr::select(GVZCLS, OVXCLS, EVZCLS, VXFXICLS) %>% 
+  etf_vix |> 
+  dplyr::select(GVZCLS, OVXCLS, EVZCLS, VXFXICLS) |> 
   divide_ts(20)
 etf_train <- etf_eval$train
 etf_test <- etf_eval$test
@@ -135,9 +135,9 @@ list(
   BVAR = mse_bvar,
   BVHAR1 = mse_bvhar_v1,
   BVHAR2 = mse_bvhar_v2
-) %>% 
-  lapply(mean) %>% 
-  unlist() %>% 
+) |> 
+  lapply(mean) |> 
+  unlist() |> 
   sort()
 
 ## ----evalplot-----------------------------------------------------------------
@@ -147,7 +147,7 @@ list(
   pred_bvar,
   pred_bvhar_v1,
   pred_bvhar_v2
-) %>% 
+) |> 
   gg_loss(y = y_test, "mse")
 
 ## ----relmape------------------------------------------------------------------
@@ -157,8 +157,8 @@ list(
   BVAR = pred_bvar,
   BVHAR1 = pred_bvhar_v1,
   BVHAR2 = pred_bvhar_v2
-) %>% 
-  lapply(rmape, pred_bench = pred_var, y = y_test) %>% 
+) |> 
+  lapply(rmape, pred_bench = pred_var, y = y_test) |> 
   unlist()
 
 ## ----rollvar------------------------------------------------------------------
@@ -181,8 +181,8 @@ list(
   BVAR = bvar_roll,
   BVHAR1 = bvhar_roll_v1,
   BVHAR2 = bvhar_roll_v2
-) %>% 
-  lapply(rmape, pred_bench = var_roll, y = y_test) %>% 
+) |> 
+  lapply(rmape, pred_bench = var_roll, y = y_test) |> 
   unlist()
 
 ## ----expandvar----------------------------------------------------------------
@@ -205,8 +205,8 @@ list(
   BVAR = bvar_expand,
   BVHAR1 = bvhar_expand_v1,
   BVHAR2 = bvhar_expand_v2
-) %>% 
-  lapply(rmape, pred_bench = var_expand, y = y_test) %>% 
+) |> 
+  lapply(rmape, pred_bench = var_expand, y = y_test) |> 
   unlist()
 
 ## ----resetopts, include=FALSE-------------------------------------------------
