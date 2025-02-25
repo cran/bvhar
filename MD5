@@ -1,6 +1,6 @@
-e85ce9cc15d9f65eeddddc6fdd2592f1 *DESCRIPTION
+91bb5722f840141589f96531244e92ae *DESCRIPTION
 140e8114a084e82125850cdb73845213 *NAMESPACE
-cafe8372b9487d3ee19e7edea0dfeac5 *NEWS.md
+f6142ae9ebb4f89ee30fe35cc045533a *NEWS.md
 36a7d1931b1e0d9e71896048eb0ad485 *R/RcppExports.R
 e3f071d40bde4328503c52994b8c6a0b *R/bvar-flat.R
 346a6974fcd8dbd43756faf33bade210 *R/bvar-minnesota.R
@@ -59,11 +59,11 @@ b901a80255d2b4753ba35ddc7cefe290 *inst/doc/bvhar.html
 586a350bc3f8207f5c3f84a0c984b310 *inst/doc/minnesota.R
 bc428d22b48dc800d1f7fe906ad50539 *inst/doc/minnesota.Rmd
 744179960e1fd720dbf9cf8ef2802583 *inst/doc/minnesota.html
-62022ea3ea3b1b140b07dcf3cf961e65 *inst/doc/shrinkage.R
-76363b92e8bc9c47a4b3ae5441a53c73 *inst/doc/shrinkage.Rmd
+7abd4b0583d60c7297151af38d37f6de *inst/doc/shrinkage.R
+78878d7c698d0b31564ad7430f04a8b8 *inst/doc/shrinkage.Rmd
 a043c6ba789bc85eec22071825d05c05 *inst/doc/shrinkage.html
-850d9f77889cf051c1ed0ce225214818 *inst/doc/stochastic-volatility.R
-e045297c64b274c5b4abf484e4e33fda *inst/doc/stochastic-volatility.Rmd
+e8506a21d49970f3f91e4feb2b297ca9 *inst/doc/stochastic-volatility.R
+eabe264d2a2f18bed5fc67473c81f44c *inst/doc/stochastic-volatility.Rmd
 44fef4e3715fc344b6b84026376bcba1 *inst/doc/stochastic-volatility.html
 279a39bbdbae45ed5090df52941d20e4 *inst/include/bvhar/forecast
 d8edcedb3190730b9e07623a390bb9ed *inst/include/bvhar/mniw
@@ -222,5 +222,5 @@ c0445adc33b0319b5defec376497a960 *tests/testthat/test-zzz.R
 d06017b2d786b37a44a8d9a6ea93bec6 *vignettes/bvhar.Rmd
 8a4764b37074508c1d30c79694453d66 *vignettes/forecasting.Rmd
 bc428d22b48dc800d1f7fe906ad50539 *vignettes/minnesota.Rmd
-76363b92e8bc9c47a4b3ae5441a53c73 *vignettes/shrinkage.Rmd
-e045297c64b274c5b4abf484e4e33fda *vignettes/stochastic-volatility.Rmd
+78878d7c698d0b31564ad7430f04a8b8 *vignettes/shrinkage.Rmd
+eabe264d2a2f18bed5fc67473c81f44c *vignettes/stochastic-volatility.Rmd
