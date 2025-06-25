@@ -62,4 +62,25 @@ inline std::shared_ptr<spdlog::logger> bvhar_sink_mt(const std::string &logger_n
 
 #endif // USE_RCPP
 
+// Debug base classes by defining `USE_BVHAR_DEBUG`
+#ifdef USE_BVHAR_DEBUG
+
+#define BVHAR_DEBUG_LOGGER(value) \
+	([](const std::string& log_name) -> std::shared_ptr<spdlog::logger> { \
+		auto temp_logger = spdlog::get(log_name); \
+		return temp_logger ? temp_logger : SPDLOG_SINK_MT(log_name); \
+	})(value)
+#define BVHAR_INIT_DEBUG(logger) logger->set_level(spdlog::level::debug)
+#define BVHAR_DEBUG_LOG(logger, ...) logger->debug(__VA_ARGS__)
+#define BVHAR_DEBUG_DROP(value) spdlog::drop(value)
+
+#else
+
+#define BVHAR_DEBUG_LOGGER(value) std::shared_ptr<spdlog::logger>(nullptr)
+#define BVHAR_INIT_DEBUG(logger) (void)0
+#define BVHAR_DEBUG_LOG(logger, ...) (void)0
+#define BVHAR_DEBUG_DROP(value) (void)0
+
+#endif // USE_BVHAR_DEBUG
+
 #endif // BVHAR_CORE_SPDLOG_H

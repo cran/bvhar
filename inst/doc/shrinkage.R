@@ -23,25 +23,25 @@ etf_train <- etf_eval$train
 etf_test <- etf_eval$test
 
 ## ----fitssvs------------------------------------------------------------------
-(fit_ssvs <- vhar_bayes(etf_train, num_chains = 1, num_iter = 20, bayes_spec = set_ssvs(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
+(fit_ssvs <- vhar_bayes(etf_train, num_chains = 1, num_iter = 20, coef_spec = set_ssvs(), contem_spec = set_ssvs(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
 
 ## ----heatssvs-----------------------------------------------------------------
 autoplot(fit_ssvs)
 
 ## ----fiths--------------------------------------------------------------------
-(fit_hs <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, bayes_spec = set_horseshoe(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
+(fit_hs <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, coef_spec = set_horseshoe(), contem_spec = set_horseshoe(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
 
 ## ----heaths-------------------------------------------------------------------
 autoplot(fit_hs)
 
 ## ----fitmn--------------------------------------------------------------------
-(fit_mn <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, bayes_spec = set_bvhar(lambda = set_lambda()), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
+(fit_mn <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, coef_spec = set_bvhar(lambda = set_lambda()), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
 
 ## ----fitng--------------------------------------------------------------------
-(fit_ng <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, bayes_spec = set_ng(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
+(fit_ng <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, coef_spec = set_ng(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
 
 ## ----fitdl--------------------------------------------------------------------
-(fit_dl <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, bayes_spec = set_dl(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
+(fit_dl <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, coef_spec = set_dl(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
 
 ## -----------------------------------------------------------------------------
 autoplot(fit_hs, type = "trace", regex_pars = "tau")

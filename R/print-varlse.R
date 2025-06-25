@@ -10,23 +10,42 @@ print.varlse <- function(x, digits = max(3L, getOption("digits") - 3L), ...) {
     paste(deparse(x$call), sep="\n", collapse = "\n"), "\n\n", sep = ""
   )
   # split the matrix for the print: B1, ..., Bp
-  bhat_mat <- split_coef(x)
+  # bhat_mat <- split_coef(x)
+  if (!is.null(eval.parent(x$call$exogen))) {
+    ols_coef <- split_endog_coef(x$coefficients[-x$exogen_id, ], x$p, x$m)
+  } else {
+    ols_coef <- split_endog_coef(x$coefficients, x$p, x$m)
+  }
   cat(sprintf("VAR(%i) Estimation using least squares\n", x$p))
   cat("====================================================\n\n")
   for (i in 1:(x$p)) {
     cat(sprintf("LSE for A%i:\n", i))
     # B1, ..., Bp--------------------
     print.default(
-      bhat_mat[[i]],
+      ols_coef[[i]],
       digits = digits,
       print.gap = 2L,
       quote = FALSE
     )
     cat("\n\n")
   }
+  if (!is.null(eval.parent(x$call$exogen))) {
+    exog_coef <- split_exogen_coef(x$coefficients, x$exogen_id, x$s, x$exogen_m)
+    for (i in seq_len(x$s + 1)) {
+      cat(sprintf("LSE for exogenous B%i:\n", i - 1))
+      print.default(
+        exog_coef[[i]],
+        digits = digits,
+        print.gap = 2L,
+        quote = FALSE
+      )
+      cat("\n\n")
+    }
+  }
   # const term----------------------
   if (x$type == "const") {
-    intercept <- x$coefficients[x$df,]
+    # intercept <- x$coefficients[x$df,]
+    intercept <- x$coefficients[x$p * x$m + 1,]
     cat("LSE for constant:\n")
     print.default(
       intercept,

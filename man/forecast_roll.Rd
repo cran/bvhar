@@ -12,7 +12,15 @@
 \alias{forecast_roll.svmod}
 \title{Out-of-sample Forecasting based on Rolling Window}
 \usage{
-forecast_roll(object, n_ahead, y_test, num_thread = 1, ...)
+forecast_roll(
+  object,
+  n_ahead,
+  y_test,
+  level = 0.05,
+  newxreg = NULL,
+  num_thread = 1,
+  ...
+)
 
 \method{print}{bvharcv}(x, digits = max(3L, getOption("digits") - 3L), ...)
 
@@ -20,20 +28,39 @@ is.bvharcv(x)
 
 \method{knit_print}{bvharcv}(x, ...)
 
-\method{forecast_roll}{olsmod}(object, n_ahead, y_test, num_thread = 1, ...)
+\method{forecast_roll}{olsmod}(
+  object,
+  n_ahead,
+  y_test,
+  level = 0.05,
+  newxreg = NULL,
+  num_thread = 1,
+  ...
+)
 
-\method{forecast_roll}{normaliw}(object, n_ahead, y_test, num_thread = 1, use_fit = TRUE, ...)
+\method{forecast_roll}{normaliw}(
+  object,
+  n_ahead,
+  y_test,
+  level = 0.05,
+  newxreg = NULL,
+  num_thread = 1,
+  use_fit = TRUE,
+  ...
+)
 
 \method{forecast_roll}{ldltmod}(
   object,
   n_ahead,
   y_test,
-  num_thread = 1,
   level = 0.05,
+  newxreg = NULL,
+  num_thread = 1,
   stable = FALSE,
   sparse = FALSE,
   med = FALSE,
   lpl = FALSE,
+  mcmc = TRUE,
   use_fit = TRUE,
   verbose = FALSE,
   ...
@@ -43,13 +70,15 @@ is.bvharcv(x)
   object,
   n_ahead,
   y_test,
-  num_thread = 1,
   level = 0.05,
+  newxreg = NULL,
+  num_thread = 1,
   use_sv = TRUE,
   stable = FALSE,
   sparse = FALSE,
   med = FALSE,
   lpl = FALSE,
+  mcmc = TRUE,
   use_fit = TRUE,
   verbose = FALSE,
   ...
@@ -62,6 +91,11 @@ is.bvharcv(x)
 
 \item{y_test}{Test data to be compared. Use \code{\link[=divide_ts]{divide_ts()}} if you don't have separate evaluation dataset.}
 
+\item{level}{Specify alpha of confidence interval level 100(1 - alpha) percentage. By default, .05.}
+
+\item{newxreg}{New values for exogenous variables.
+Should have the same row numbers as \code{y_test}.}
+
 \item{num_thread}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Number of threads}
 
 \item{...}{not used}
@@ -72,8 +106,6 @@ is.bvharcv(x)
 
 \item{use_fit}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Use \code{object} result for the first window. By default, \code{TRUE}.}
 
-\item{level}{Specify alpha of confidence interval level 100(1 - alpha) percentage. By default, .05.}
-
 \item{stable}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Filter only stable coefficient draws in MCMC records.}
 
 \item{sparse}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Apply restriction. By default, \code{FALSE}.}
@@ -81,6 +113,8 @@ is.bvharcv(x)
 \item{med}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} If \code{TRUE}, use median of forecast draws instead of mean (default).}
 
 \item{lpl}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Compute log-predictive likelihood (LPL). By default, \code{FALSE}.}
+
+\item{mcmc}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} If \code{TRUE}, run new MCMC in new windows. By default, \code{TRUE}.}
 
 \item{verbose}{Print the progress bar in the console. By default, \code{FALSE}.}
 

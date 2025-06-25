@@ -19,8 +19,8 @@ print.bvharspillover <- function(x, digits = max(3L, getOption("digits") - 3L), 
     from <- x$from
     tot <- x$tot
   }
-  connect <- rbind(connect, "to_spillovers" = to)
-  connect <- cbind(connect, "from_spillovers" = c(from, tot))
+  # connect <- rbind(connect, "to_spillovers" = to)
+  # connect <- cbind(connect, "from_spillovers" = c(from, tot))
   print(
     connect,
     digits = digits,

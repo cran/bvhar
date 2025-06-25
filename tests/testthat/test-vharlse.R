@@ -51,4 +51,25 @@ test_that("Computation Methods", {
     fit_test_qr$coefficients
   )
 })
+
+test_that("VHARX", {
+  skip_on_cran()
+
+  endog_y <- etf_vix[, 1:3]
+  exogen <- etf_vix[, 4:5]
+
+  fit_test_nor <- vhar_lm(y = endog_y, exogen = exogen)
+  fit_test_llt <- vhar_lm(y = endog_y, exogen = exogen, method = "chol")
+  fit_test_qr <- vhar_lm(y = endog_y, exogen = exogen, method = "qr")
+
+  expect_equal(
+    fit_test_nor$coefficients,
+    fit_test_llt$coefficients
+  )
+
+  expect_equal(
+    fit_test_nor$coefficients,
+    fit_test_qr$coefficients
+  )
+})
 #> Test passed 🌈

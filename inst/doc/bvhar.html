@@ -389,7 +389,7 @@ forecasting.</p>
 <li>T: Total number of observation</li>
 <li>p: VAR lag</li>
 <li>m: Dimension of variable</li>
-<li>s = T - p</li>
+<li>n = T - p</li>
 <li>k = m * p + 1 if constant term, k = m * p without constant term</li>
 </ul>
 </div>
@@ -440,7 +440,7 @@ A = \begin{bmatrix}
 <p>This form also corresponds to the other model. Use
 <code>var_lm(y, p)</code> to model VAR(p). You can specify
 <code>type = &quot;none&quot;</code> to get model without constant term.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>(fit_var <span class="ot">&lt;-</span> <span class="fu">var_lm</span>(etf_train, var_lag))</span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>(fit_var <span class="ot">&lt;-</span> <span class="fu">var_lm</span>(<span class="at">y =</span> etf_train, <span class="at">p =</span> var_lag))</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; var_lm(y = etf_train, p = var_lag)</span></span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; </span></span>
@@ -566,7 +566,7 @@ X_1 = X_0 \mathbb{C}_{HAR}^T = \begin{bmatrix}
 (<code>scale_har(m, week = 5, month = 22)</code>). Use
 <code>vhar_lm(y)</code> to fit VHAR. You can specify
 <code>type = &quot;none&quot;</code> to get model without constant term.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>(fit_har <span class="ot">&lt;-</span> <span class="fu">vhar_lm</span>(etf_train))</span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>(fit_har <span class="ot">&lt;-</span> <span class="fu">vhar_lm</span>(<span class="at">y =</span> etf_train))</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; vhar_lm(y = etf_train)</span></span>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; </span></span>

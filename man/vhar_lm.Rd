@@ -14,6 +14,8 @@
 vhar_lm(
   y,
   har = c(5, 22),
+  exogen = NULL,
+  s = 0,
   include_mean = TRUE,
   method = c("nor", "chol", "qr")
 )
@@ -34,6 +36,10 @@ is.vharlse(x)
 \item{y}{Time series data of which columns indicate the variables}
 
 \item{har}{Numeric vector for weekly and monthly order. By default, \code{c(5, 22)}.}
+
+\item{exogen}{Exogenous variables}
+
+\item{s}{Lag of exogeneous variables in VHARX. By default, \code{s = 0}.}
 
 \item{include_mean}{Add constant term (Default: \code{TRUE}) or not (\code{FALSE})}
 

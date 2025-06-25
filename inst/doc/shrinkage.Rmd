@@ -45,7 +45,7 @@ etf_test <- etf_eval$test
 - `num_iter`: Total number of iterations
 - `num_burn`: Number of burn-in
 - `thinning`: Thinning
-- `bayes_spec`: Output of `set_ssvs()`
+- `coef_spec`: Coefficient prior specification.
     - Minneosta prior
         - BVAR: `set_bvar()`
         - BVHAR: `set_bvhar()` and `set_weight_bvhar()`
@@ -54,6 +54,7 @@ etf_test <- etf_eval$test
     - Horseshoe prior: `set_horseshoe()`
     - NG prior: `set_ng()`
     - DL prior: `set_dl()`
+- `contem_spec`: Contemporaneous prior specification.
 - `cov_spec`: Covariance prior specification. Use `set_ldlt()` for homoskedastic model.
 - `include_mean = TRUE`: By default, you include the constant term in the model.
 - `minnesota = c("no", "short", "longrun")`: Minnesota-type shrinkage.
@@ -65,7 +66,7 @@ etf_test <- etf_eval$test
 ## Stochastic Search Variable Selection (SSVS) Prior
 
 ```{r fitssvs}
-(fit_ssvs <- vhar_bayes(etf_train, num_chains = 1, num_iter = 20, bayes_spec = set_ssvs(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
+(fit_ssvs <- vhar_bayes(etf_train, num_chains = 1, num_iter = 20, coef_spec = set_ssvs(), contem_spec = set_ssvs(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
 ```
 
 `autoplot()` for the fit (`bvharsp` object) provides coefficients heatmap.
@@ -78,10 +79,10 @@ autoplot(fit_ssvs)
 
 ## Horseshoe Prior
 
-`bayes_spec` is the initial specification by `set_horseshoe()`. Others are the same.
+`coef_spec` is the initial specification by `set_horseshoe()`. Others are the same.
 
 ```{r fiths}
-(fit_hs <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, bayes_spec = set_horseshoe(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
+(fit_hs <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, coef_spec = set_horseshoe(), contem_spec = set_horseshoe(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
 ```
 
 ```{r heaths}
@@ -91,19 +92,19 @@ autoplot(fit_hs)
 ## Minnesota Prior
 
 ```{r fitmn}
-(fit_mn <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, bayes_spec = set_bvhar(lambda = set_lambda()), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
+(fit_mn <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, coef_spec = set_bvhar(lambda = set_lambda()), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
 ```
 
 ## Normal-Gamma prior
 
 ```{r fitng}
-(fit_ng <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, bayes_spec = set_ng(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
+(fit_ng <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, coef_spec = set_ng(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
 ```
 
 ## Dirichlet-Laplace prior
 
 ```{r fitdl}
-(fit_dl <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, bayes_spec = set_dl(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
+(fit_dl <- vhar_bayes(etf_train, num_chains = 2, num_iter = 20, coef_spec = set_dl(), cov_spec = set_ldlt(), include_mean = FALSE, minnesota = "longrun"))
 ```
 
 # Bayesian visualization
@@ -119,7 +120,6 @@ autoplot(fit_hs, type = "trace", regex_pars = "tau")
 ```{r denshs}
 autoplot(fit_hs, type = "dens", regex_pars = "kappa", facet_args = list(dir = "v", nrow = nrow(fit_hs$coefficients)))
 ```
-
 
 ```{r resetopts, include=FALSE}
 options(orig_opts)

@@ -11,13 +11,17 @@
 var_bayes(
   y,
   p,
+  exogen = NULL,
+  s = 0,
   num_chains = 1,
   num_iter = 1000,
   num_burn = floor(num_iter/2),
   thinning = 1,
-  bayes_spec = set_bvar(),
+  coef_spec = set_bvar(),
+  contem_spec = coef_spec,
   cov_spec = set_ldlt(),
   intercept = set_intercept(),
+  exogen_spec = coef_spec,
   include_mean = TRUE,
   minnesota = TRUE,
   ggl = TRUE,
@@ -40,6 +44,10 @@ var_bayes(
 
 \item{p}{VAR lag}
 
+\item{exogen}{Unmodeled variables}
+
+\item{s}{Lag of exogeneous variables in VARX(p, s). By default, \code{s = 0}.}
+
 \item{num_chains}{Number of MCMC chains}
 
 \item{num_iter}{MCMC iteration number}
@@ -48,11 +56,15 @@ var_bayes(
 
 \item{thinning}{Thinning every thinning-th iteration}
 
-\item{bayes_spec}{A BVAR model specification by \code{\link[=set_bvar]{set_bvar()}}, \code{\link[=set_ssvs]{set_ssvs()}}, or \code{\link[=set_horseshoe]{set_horseshoe()}}.}
+\item{coef_spec}{Coefficient prior specification by \code{\link[=set_bvar]{set_bvar()}}, \code{\link[=set_ssvs]{set_ssvs()}}, or \code{\link[=set_horseshoe]{set_horseshoe()}}.}
+
+\item{contem_spec}{Contemporaneous coefficient prior specification by \code{\link[=set_bvar]{set_bvar()}}, \code{\link[=set_ssvs]{set_ssvs()}}, or \code{\link[=set_horseshoe]{set_horseshoe()}}.}
 
 \item{cov_spec}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} SV specification by \code{\link[=set_sv]{set_sv()}}.}
 
 \item{intercept}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Prior for the constant term by \code{\link[=set_intercept]{set_intercept()}}.}
+
+\item{exogen_spec}{Exogenous coefficient prior specification.}
 
 \item{include_mean}{Add constant term (Default: \code{TRUE}) or not (\code{FALSE})}
 

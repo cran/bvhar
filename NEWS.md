@@ -1,3 +1,35 @@
+# bvhar 2.3.0
+
+* Requires `R >= 4.2` due to Rtools 4.0 error with optional parameters in C++.
+
+* Changed `bayes_spec` argument into `coef_spec` and `contem_spec` to enable different priors
+
+* Added `mcmc` option in `forecast_roll()` and `forecast_expand()` for `ldltmod` and `svmod` classes.
+
+## Exogenous variables
+
+* `var_lm()` and `vhar_lm()` can run VARX and VHARX via `exogen` and `s`.
+
+* `var_bayes()` and `vhar_bayes()` can run Bayesian VARX and VHARX via `exogen`, `s`, and `exogen_spec`.
+
+* `exogen_spec` determines the prior for the exogenous term.
+
+* When forecasting these VARX and VHARX models, `predict()` requires `newxreg`.
+
+## Internal changes (C++)
+
+* Added `shrinkage` headers for strategy design pattern.
+
+* Added `McmcParams`, `McmcAlgo`, and `McmcRun` (changed original `McmcRun` to `CtaRun`) for extensibility of MCMC algorithms.
+
+* Also added base forecaster classes.
+
+* Changed the way OLS spillover classes work.
+
+* Added `OlsSpilloverRun` and `OlsDynamicSpillover` for volatility spillover in OLS.
+
+* If defining `USE_BVHAR_DEBUG` macro variable when compiling, users can see debug messages.
+
 # bvhar 2.2.2
 
 * Fix `unlist()` error in print methods for `r-devel` (4.5.0).

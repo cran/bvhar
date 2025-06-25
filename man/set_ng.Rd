@@ -11,9 +11,7 @@ set_ng(
   group_shape = 0.01,
   group_scale = 0.01,
   global_shape = 0.01,
-  global_scale = 0.01,
-  contem_global_shape = 0.01,
-  contem_global_scale = 0.01
+  global_scale = 0.01
 )
 
 \method{print}{ngspec}(x, digits = max(3L, getOption("digits") - 3L), ...)
@@ -30,10 +28,6 @@ is.ngspec(x)
 \item{global_shape}{Inverse gamma prior shape for coefficient global shrinkage}
 
 \item{global_scale}{Inverse gamma prior scale for coefficient global shrinkage}
-
-\item{contem_global_shape}{Inverse gamma prior shape for contemporaneous coefficient global shrinkage}
-
-\item{contem_global_scale}{Inverse gamma prior scale for contemporaneous coefficient global shrinkage}
 
 \item{x}{Any object}
 

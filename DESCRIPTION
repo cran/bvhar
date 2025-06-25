@@ -1,7 +1,7 @@
 Package: bvhar
 Type: Package
 Title: Bayesian Vector Heterogeneous Autoregressive Modeling
-Version: 2.2.2
+Version: 2.3.0
 Authors@R: 
     c(person(given = "Young Geun",
              family = "Kim",
@@ -24,17 +24,17 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
 Imports: lifecycle, Rcpp, ggplot2, tidyr, tibble, dplyr, foreach,
-        purrr, stats, optimParallel, posterior, bayesplot
+        purrr, stats, optimParallel, posterior, bayesplot, utils
 LinkingTo: BH (>= 1.87.0-0), Rcpp (>= 0.10.0), RcppEigen (>=
         0.3.4.0.0), RcppSpdlog, RcppThread
 VignetteBuilder: knitr
-Depends: R (>= 4.1.0)
+Depends: R (>= 4.2.0)
 Config/testthat/edition: 3
 NeedsCompilation: yes
-Packaged: 2025-02-28 01:56:38 UTC; ygeunmini
-Author: Young Geun Kim [aut, cre, cph]
-    (<https://orcid.org/0000-0001-8651-1167>),
+Packaged: 2025-06-25 05:54:35 UTC; ygmini
+Author: Young Geun Kim [aut, cre, cph] (ORCID:
+    <https://orcid.org/0000-0001-8651-1167>),
   Changryong Baek [ctb]
 Maintainer: Young Geun Kim <ygeunkimstat@gmail.com>
 Repository: CRAN
-Date/Publication: 2025-02-28 09:40:08 UTC
+Date/Publication: 2025-06-25 06:20:02 UTC

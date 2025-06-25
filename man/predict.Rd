@@ -16,9 +16,9 @@
 \alias{knit_print.predbvhar}
 \title{Forecasting Multivariate Time Series}
 \usage{
-\method{predict}{varlse}(object, n_ahead, level = 0.05, ...)
+\method{predict}{varlse}(object, n_ahead, level = 0.05, newxreg, ...)
 
-\method{predict}{vharlse}(object, n_ahead, level = 0.05, ...)
+\method{predict}{vharlse}(object, n_ahead, level = 0.05, newxreg, ...)
 
 \method{predict}{bvarmn}(object, n_ahead, n_iter = 100L, level = 0.05, num_thread = 1, ...)
 
@@ -30,6 +30,7 @@
   object,
   n_ahead,
   level = 0.05,
+  newxreg,
   stable = FALSE,
   num_thread = 1,
   sparse = FALSE,
@@ -42,6 +43,7 @@
   object,
   n_ahead,
   level = 0.05,
+  newxreg,
   stable = FALSE,
   num_thread = 1,
   sparse = FALSE,
@@ -54,6 +56,7 @@
   object,
   n_ahead,
   level = 0.05,
+  newxreg,
   stable = FALSE,
   num_thread = 1,
   use_sv = TRUE,
@@ -67,6 +70,7 @@
   object,
   n_ahead,
   level = 0.05,
+  newxreg,
   stable = FALSE,
   num_thread = 1,
   use_sv = TRUE,
@@ -88,6 +92,9 @@ is.predbvhar(x)
 \item{n_ahead}{step to forecast}
 
 \item{level}{Specify alpha of confidence interval level 100(1 - alpha) percentage. By default, .05.}
+
+\item{newxreg}{New values for exogenous variables.
+Should have the same row numbers with \code{n_ahead}.}
 
 \item{...}{not used}
 

@@ -17,25 +17,15 @@ spillover <- function(object, n_ahead = 10L, ...) {
 #' @rdname spillover
 #' @export
 spillover.olsmod <- function(object, n_ahead = 10L, ...) {
-  # if (object$process == "VAR") {
-  #   mod_type <- "freq_var"
-  # } else if (object$process == "VHAR") {
-  #   mod_type <- "freq_vhar"
-  # } else {
-  #   mod_type <- ifelse(grepl(pattern = "^BVAR_", object$process), "var", "vhar")
-  # }
-  # dim_data <- object$coefficients
-  # if (grepl(pattern = "^freq_", mod_type)) {
-  #   res <- compute_ols_spillover(object, n_ahead)
-  # } else {
-  #   res <- compute_mn_spillover(
-  #     object,
-  #     step = n_ahead,
-  #     num_iter = num_iter, num_burn = num_burn, thin = thinning,
-  #     seed = sample.int(.Machine$integer.max, size = 1)
-  #   )
-  # }
-  res <- compute_ols_spillover(object, n_ahead)
+  res <- switch(
+    object$process,
+    "VAR" = {
+      compute_var_spillover(object$coefficients, object$p, object$covmat, n_ahead)
+    },
+    "VHAR" = {
+      compute_vhar_spillover(object$coefficients, object$week, object$month, object$covmat, n_ahead)
+    }
+  )
   colnames(res$connect) <- colnames(object$coefficients)
   rownames(res$connect) <- colnames(object$coefficients)
   res$df_long <-
@@ -444,37 +434,41 @@ dynamic_spillover.ldltmod <- function(object, n_ahead = 10L, window, level = .05
   # num_chains <- object$chain
   include_mean <- ifelse(object$type == "const", TRUE, FALSE)
   # prior_nm <- object$spec$prior
-  prior_nm <- ifelse(
-    object$spec$prior == "MN_VAR" || object$spec$prior == "MN_VHAR" || object$spec$prior == "MN_Hierarchical",
-    "Minnesota",
-    object$spec$prior
-  )
-  if (prior_nm == "Minnesota") {
-    param_prior <- append(object$spec, list(p = object$p))
-    if (object$spec$hierarchical) {
-      param_prior$shape <- object$spec$lambda$param[1]
-      param_prior$rate <- object$spec$lambda$param[2]
-      param_prior$grid_size <- object$spec$lambda$grid_size
-      prior_nm <- "MN_Hierarchical"
-    }
-  } else if (prior_nm == "SSVS") {
-    param_prior <- object$spec
-  } else if (prior_nm == "Horseshoe") {
-    param_prior <- list()
-  } else if (prior_nm == "NG") {
-    param_prior <- object$spec
-  } else if (prior_nm == "DL") {
-    param_prior <- object$spec
-  }
-  prior_type <- switch(prior_nm,
-    "Minnesota" = 1,
-    "SSVS" = 2,
-    "Horseshoe" = 3,
-    "MN_Hierarchical" = 4,
-    "NG" = 5,
-    "DL" = 6,
-    "GDP" = 7
-  )
+  # prior_nm <- ifelse(
+  #   object$spec$prior == "MN_VAR" || object$spec$prior == "MN_VHAR" || object$spec$prior == "MN_Hierarchical",
+  #   "Minnesota",
+  #   object$spec$prior
+  # )
+  # if (prior_nm == "Minnesota") {
+  #   param_prior <- append(object$spec, list(p = object$p))
+  #   if (object$spec$hierarchical) {
+  #     param_prior$shape <- object$spec$lambda$param[1]
+  #     param_prior$rate <- object$spec$lambda$param[2]
+  #     param_prior$grid_size <- object$spec$lambda$grid_size
+  #     prior_nm <- "MN_Hierarchical"
+  #   }
+  # } else if (prior_nm == "SSVS") {
+  #   param_prior <- object$spec
+  # } else if (prior_nm == "Horseshoe") {
+  #   param_prior <- list()
+  # } else if (prior_nm == "NG") {
+  #   param_prior <- object$spec
+  # } else if (prior_nm == "DL") {
+  #   param_prior <- object$spec
+  # }
+  # prior_type <- switch(prior_nm,
+  #   "Minnesota" = 1,
+  #   "SSVS" = 2,
+  #   "Horseshoe" = 3,
+  #   "MN_Hierarchical" = 4,
+  #   "NG" = 5,
+  #   "DL" = 6,
+  #   "GDP" = 7
+  # )
+  param_prior <- get_coefspec(object)
+  prior_type <- enumerate_prior(object$spec_coef$prior)
+  contem_prior <- get_contemspec(object)
+  contem_prior_type <- enumerate_prior(object$spec_contem$prior)
   grp_id <- unique(c(object$group))
   # if (length(grp_id) > 1) {
   #   own_id <- 2
@@ -503,9 +497,12 @@ dynamic_spillover.ldltmod <- function(object, n_ahead = 10L, window, level = .05
         param_prior = param_prior,
         param_intercept = object$intercept[c("mean_non", "sd_non")],
         # param_init = object$init[[1]], # should add multiple chain later
-        param_init = object$init,
+        param_init = object$init_coef,
         prior_type = prior_type,
         ggl = object$ggl,
+        contem_prior = contem_prior,
+        contem_init = object$init_contem,
+        contem_prior_type = contem_prior_type,
         grp_id = grp_id, own_id = own_id, cross_id = cross_id, grp_mat = object$group,
         include_mean = include_mean,
         # seed_chain = sample.int(.Machine$integer.max, size = num_horizon),
@@ -529,9 +526,12 @@ dynamic_spillover.ldltmod <- function(object, n_ahead = 10L, window, level = .05
         param_reg = object$sv[c("shape", "scale")],
         param_prior = param_prior,
         param_intercept = object$intercept[c("mean_non", "sd_non")],
-        param_init = object$init,
+        param_init = object$init_coef,
         prior_type = prior_type,
         ggl = object$ggl,
+        contem_prior = contem_prior,
+        contem_init = object$init_contem,
+        contem_prior_type = contem_prior_type,
         grp_id = grp_id, own_id = own_id, cross_id = cross_id, grp_mat = object$group,
         include_mean = include_mean,
         seed_chain = sample.int(.Machine$integer.max, size = num_chains * num_horizon) |> matrix(ncol = num_chains),

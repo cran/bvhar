@@ -411,18 +411,13 @@ set_intercept <- function(mean = 0, sd = .1) {
 #'
 #' Set SSVS hyperparameters for VAR or VHAR coefficient matrix and Cholesky factor.
 #'
-#' @param coef_spike_grid Griddy gibbs grid size for scaling factor (between 0 and 1) of spike sd which is Spike sd = c * slab sd
-#' @param coef_slab_shape Inverse gamma shape for slab sd
-#' @param coef_slab_scl Inverse gamma scale for slab sd
-#' @param coef_s1 First shape of coefficients prior beta distribution
-#' @param coef_s2 Second shape of coefficients prior beta distribution
+#' @param spike_grid Griddy gibbs grid size for scaling factor (between 0 and 1) of spike sd which is Spike sd = c * slab sd
+#' @param slab_shape Inverse gamma shape for slab sd
+#' @param slab_scl Inverse gamma scale for slab sd
+#' @param s1 First shape of coefficients prior beta distribution
+#' @param s2 Second shape of coefficients prior beta distribution
 #' @param shape Gamma shape parameters for precision matrix (See Details).
 #' @param rate Gamma rate parameters for precision matrix (See Details).
-#' @param chol_spike_grid Griddy gibbs grid size for scaling factor (between 0 and 1) of spike sd which is Spike sd = c * slab sd in the cholesky factor
-#' @param chol_slab_shape Inverse gamma shape for slab sd in the cholesky factor
-#' @param chol_slab_scl Inverse gamma scale for slab sd in the cholesky factor
-#' @param chol_s1 First shape of cholesky factor prior beta distribution
-#' @param chol_s2 Second shape of cholesky factor prior beta distribution
 #' @details 
 #' Let \eqn{\alpha} be the vectorized coefficient, \eqn{\alpha = vec(A)}.
 #' Spike-slab prior is given using two normal distributions.
@@ -469,44 +464,43 @@ set_intercept <- function(mean = 0, sd = .1) {
 #' Koop, G., & Korobilis, D. (2009). *Bayesian Multivariate Time Series Methods for Empirical Macroeconomics*. Foundations and Trends® in Econometrics, 3(4), 267-358.
 #' @order 1
 #' @export
-set_ssvs <- function(coef_spike_grid = 100L,
-                     coef_slab_shape = .01,
-                     coef_slab_scl = .01,
-                     coef_s1 = c(1, 1),
-                     coef_s2 = c(1, 1),
+set_ssvs <- function(spike_grid = 100L,
+                     slab_shape = .01,
+                     slab_scl = .01,
+                     s1 = c(1, 1),
+                     s2 = c(1, 1),
                      shape = .01,
-                     rate = .01,
-                     chol_spike_grid = 100,
-                     chol_slab_shape = .01,
-                     chol_slab_scl = .01,
-                     chol_s1 = 1,
-                     chol_s2 = 1) {
+                     rate = .01) {
   if (!(is.vector(shape) && is.vector(rate))) {
     stop("'shape' and 'rate' be a vector.")
   }
-  if (!(length(chol_s1) == 1 && length(chol_s2 == 1))) {
-    stop("'chol_s1' and 'chol_s2' should be length 1 numeric.")
-  }
-  if (!(length(coef_slab_shape) == 1 && length(chol_slab_shape) == 1)) {
-    stop("'*_slab_*' should be length 1 numeric.")
-  }
-  if (!(length(coef_s1) == 2 && length(coef_s2 == 2))) {
-    stop("'coef_s1' and 'coef_s2' should be length 2 numeric, each indicating own and cross lag.")
-  }
-  if (coef_s1[1] < coef_s2[1]) {
-    stop("'coef_s1[1]' should be same or larger than 'coef_s2[1]'.") # own-lag
-  }
-  if (coef_s1[2] > coef_s2[2]) {
-    stop("'coef_s1[2]' should be same or smaller than 'coef_s2[2]'.") # cross-lag
-  }
+  # if (!(length(chol_s1) == 1 && length(chol_s2 == 1))) {
+  #   stop("'chol_s1' and 'chol_s2' should be length 1 numeric.")
+  # }
+  # if (!(length(coef_slab_shape) == 1 && length(chol_slab_shape) == 1)) {
+  #   stop("'*_slab_*' should be length 1 numeric.")
+  # }
+  # if (!(length(coef_s1) == 2 && length(coef_s2 == 2))) {
+  #   stop("'coef_s1' and 'coef_s2' should be length 2 numeric, each indicating own and cross lag.")
+  # }
+  # if (coef_s1[1] < coef_s2[1]) {
+  #   stop("'coef_s1[1]' should be same or larger than 'coef_s2[1]'.") # own-lag
+  # }
+  # if (coef_s1[2] > coef_s2[2]) {
+  #   stop("'coef_s1[2]' should be same or smaller than 'coef_s2[2]'.") # cross-lag
+  # }
   # coefficients---------------------
   res <- list(
+    shape = shape,
+    rate = rate,
     # coef_spike_scl = coef_spike_scl,
-    coef_grid = 100,
-    coef_slab_shape = coef_slab_shape,
-    coef_slab_scl = coef_slab_scl,
-    coef_s1 = coef_s1,
-    coef_s2 = coef_s2
+    grid_size = spike_grid,
+    slab_shape = slab_shape,
+    slab_scl = slab_scl,
+    s1 = s1,
+    s2 = s2,
+    process = "VAR",
+    prior = "SSVS"
   )
   # non_param <- list(
   #   mean_non = mean_non,
@@ -517,29 +511,29 @@ set_ssvs <- function(coef_spike_grid = 100L,
     stop("The length of 'coef_spike', 'coef_slab', and 'coef_mixture' should be the same.")
   }
   # res <- append(coef_param, non_param)
-  # cholesky factor-------------------
-  chol_param <- list(
-    shape = shape,
-    rate = rate,
-    # chol_spike_scl = chol_spike_scl,
-    chol_grid = 100,
-    chol_slab_shape = chol_slab_shape,
-    chol_slab_scl = chol_slab_scl,
-    chol_s1 = chol_s1,
-    chol_s2 = chol_s2,
-    process = "VAR",
-    prior = "SSVS"
-  )
-  len_param <- sapply(chol_param, length)
-  len_gamma <- len_param[1:2]
-  len_eta <- len_param[3:5]
-  if (length(unique(len_gamma[len_gamma != 1])) > 1) {
-    stop("The length of 'shape' and 'rate' should be the same.")
-  }
-  if (length(unique(len_eta[len_eta != 1])) > 1) {
-    stop("The size of 'chol_spike', 'chol_slab', and 'chol_mixture' should be the same.")
-  }
-  res <- append(res, chol_param)
+  # # cholesky factor-------------------
+  # chol_param <- list(
+  #   shape = shape,
+  #   rate = rate,
+  #   # chol_spike_scl = chol_spike_scl,
+  #   chol_grid = 100,
+  #   chol_slab_shape = chol_slab_shape,
+  #   chol_slab_scl = chol_slab_scl,
+  #   chol_s1 = chol_s1,
+  #   chol_s2 = chol_s2,
+  #   process = "VAR",
+  #   prior = "SSVS"
+  # )
+  # len_param <- sapply(chol_param, length)
+  # len_gamma <- len_param[1:2]
+  # len_eta <- len_param[3:5]
+  # if (length(unique(len_gamma[len_gamma != 1])) > 1) {
+  #   stop("The length of 'shape' and 'rate' should be the same.")
+  # }
+  # if (length(unique(len_eta[len_eta != 1])) > 1) {
+  #   stop("The size of 'chol_spike', 'chol_slab', and 'chol_mixture' should be the same.")
+  # }
+  # res <- append(res, chol_param)
   class(res) <- "ssvsinput"
   res
 }
@@ -602,8 +596,6 @@ set_horseshoe <- function(local_sparsity = 1, group_sparsity = 1, global_sparsit
 #' @param group_scale Inverse gamma prior scale for coefficient group shrinkage
 #' @param global_shape Inverse gamma prior shape for coefficient global shrinkage
 #' @param global_scale Inverse gamma prior scale for coefficient global shrinkage
-#' @param contem_global_shape Inverse gamma prior shape for contemporaneous coefficient global shrinkage
-#' @param contem_global_scale Inverse gamma prior scale for contemporaneous coefficient global shrinkage
 #' @return `ngspec` object
 #' @references
 #' Chan, J. C. C. (2021). *Minnesota-type adaptive hierarchical priors for large Bayesian VARs*. International Journal of Forecasting, 37(3), 1212-1226.
@@ -617,9 +609,7 @@ set_ng <- function(shape_sd = .01,
                    group_shape = .01,
                    group_scale = .01,
                    global_shape = .01,
-                   global_scale = .01,
-                   contem_global_shape = .01,
-                   contem_global_scale = .01) {
+                   global_scale = .01) {
   # if (!(is.vector(local_shape) && is.vector(contem_shape))) {
   #   stop("'local_shape' and 'contem_shape' should be a vector.")
   # }
@@ -628,9 +618,7 @@ set_ng <- function(shape_sd = .01,
       length(group_shape) == 1 &&
       length(group_scale) == 1 &&
       length(global_shape) == 1 &&
-      length(global_scale) == 1 &&
-      length(contem_global_shape) == 1 &&
-      length(contem_global_scale) == 1
+      length(global_scale) == 1
   )) {
     stop("'group_shape', 'group_scale', 'global_shape', 'global_scale', 'contem_global_shape' and 'contem_global_scale' should be length 1 numeric.")
   }
@@ -642,10 +630,10 @@ set_ng <- function(shape_sd = .01,
     group_shape = group_shape,
     group_scale = group_scale,
     global_shape = global_shape,
-    global_scale = global_scale,
-    # contem_shape = contem_shape,
-    contem_global_shape = contem_global_shape,
-    contem_global_scale = contem_global_scale
+    global_scale = global_scale
+    # # contem_shape = contem_shape,
+    # contem_global_shape = contem_global_shape,
+    # contem_global_scale = contem_global_scale
   )
   class(res) <- "ngspec"
   res

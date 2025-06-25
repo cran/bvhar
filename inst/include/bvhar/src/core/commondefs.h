@@ -39,6 +39,7 @@
 	#define CAST Rcpp::as
 	#define CAST_DOUBLE(value) value
 	#define CAST_INT(value) value
+	#define CAST_BOOL(value) value
 	#define CONTAINS(container, key) container.containsElementNamed(key)
 	#define CREATE_LIST(...) Rcpp::List::create(__VA_ARGS__)
 	#define NAMED Rcpp::Named
@@ -93,6 +94,7 @@
   #define CAST py::cast
 	#define CAST_DOUBLE(value) py::cast<double>(value)
 	#define CAST_INT(value) py::int_(value)
+	#define CAST_BOOL(value) py::cast<bool>(value)
 	#define CONTAINS(container, key) container.contains(key)
 	#define CREATE_LIST(...) py::dict(__VA_ARGS__)
 	#define NAMED py::arg
@@ -110,6 +112,7 @@
 #endif
 
 #include <memory>
+#include <type_traits>
 
 #if !defined(__cpp_lib_make_unique)
 namespace std {

@@ -32,8 +32,12 @@ is.stable <- function(x, ...) {
 #' where \eqn{A} is VAR(1) coefficient matrix representation.
 #' @export
 stableroot.varlse <- function(x, ...) {
+  if (!is.null(eval.parent(x$call$exogen))) {
+    # temporarily remove exogen part until adding newx
+    x$coefficients <- x$coefficients[-x$exogen_id, ]
+  }
   eigen_vals <-
-    compute_var_stablemat(x) |>
+    compute_var_stablemat(x$coefficients, x$p) |>
     eigen()
   Mod(eigen_vals$values)
 }
@@ -55,8 +59,13 @@ is.stable.varlse <- function(x, ...) {
 #' @rdname stableroot
 #' @export
 stableroot.vharlse <- function(x, ...) {
+  if (!is.null(eval.parent(x$call$exogen))) {
+    # temporarily remove exogen part until adding newx
+    x$coefficients <- x$coefficients[-x$exogen_id, ]
+    # x$HARtrans <- x$HARtrans[-x$exogen_id, -x$exogen_colid]
+  }
   eigen_vals <-
-    compute_vhar_stablemat(x) |>
+    compute_vhar_stablemat(x$coefficients, x$HARtrans) |>
     eigen()
   Mod(eigen_vals$values)
 }
@@ -71,7 +80,7 @@ is.stable.vharlse <- function(x, ...) {
 #' @export
 stableroot.bvarmn <- function(x, ...) {
   eigen_vals <- 
-    compute_var_stablemat(x) |> 
+    compute_var_stablemat(x$coefficients, x$p) |> 
     eigen()
   Mod(eigen_vals$values)
 }
@@ -86,7 +95,7 @@ is.stable.bvarmn <- function(x, ...) {
 #' @export
 stableroot.bvarflat <- function(x, ...) {
   eigen_vals <- 
-    compute_var_stablemat(x) |> 
+    compute_var_stablemat(x$coefficients, x$p) |> 
     eigen()
   Mod(eigen_vals$values)
 }
@@ -101,7 +110,7 @@ is.stable.bvarflat <- function(x, ...) {
 #' @export
 stableroot.bvharmn <- function(x, ...) {
   eigen_vals <-
-    compute_vhar_stablemat(x) |>
+    compute_vhar_stablemat(x$coefficients, x$HARtrans) |>
     eigen()
   Mod(eigen_vals$values)
 }

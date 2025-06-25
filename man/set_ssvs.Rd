@@ -8,18 +8,13 @@
 \title{Stochastic Search Variable Selection (SSVS) Hyperparameter for Coefficients Matrix and Cholesky Factor}
 \usage{
 set_ssvs(
-  coef_spike_grid = 100L,
-  coef_slab_shape = 0.01,
-  coef_slab_scl = 0.01,
-  coef_s1 = c(1, 1),
-  coef_s2 = c(1, 1),
+  spike_grid = 100L,
+  slab_shape = 0.01,
+  slab_scl = 0.01,
+  s1 = c(1, 1),
+  s2 = c(1, 1),
   shape = 0.01,
-  rate = 0.01,
-  chol_spike_grid = 100,
-  chol_slab_shape = 0.01,
-  chol_slab_scl = 0.01,
-  chol_s1 = 1,
-  chol_s2 = 1
+  rate = 0.01
 )
 
 \method{print}{ssvsinput}(x, digits = max(3L, getOption("digits") - 3L), ...)
@@ -29,29 +24,19 @@ is.ssvsinput(x)
 \method{knit_print}{ssvsinput}(x, ...)
 }
 \arguments{
-\item{coef_spike_grid}{Griddy gibbs grid size for scaling factor (between 0 and 1) of spike sd which is Spike sd = c * slab sd}
+\item{spike_grid}{Griddy gibbs grid size for scaling factor (between 0 and 1) of spike sd which is Spike sd = c * slab sd}
 
-\item{coef_slab_shape}{Inverse gamma shape for slab sd}
+\item{slab_shape}{Inverse gamma shape for slab sd}
 
-\item{coef_slab_scl}{Inverse gamma scale for slab sd}
+\item{slab_scl}{Inverse gamma scale for slab sd}
 
-\item{coef_s1}{First shape of coefficients prior beta distribution}
+\item{s1}{First shape of coefficients prior beta distribution}
 
-\item{coef_s2}{Second shape of coefficients prior beta distribution}
+\item{s2}{Second shape of coefficients prior beta distribution}
 
 \item{shape}{Gamma shape parameters for precision matrix (See Details).}
 
 \item{rate}{Gamma rate parameters for precision matrix (See Details).}
-
-\item{chol_spike_grid}{Griddy gibbs grid size for scaling factor (between 0 and 1) of spike sd which is Spike sd = c * slab sd in the cholesky factor}
-
-\item{chol_slab_shape}{Inverse gamma shape for slab sd in the cholesky factor}
-
-\item{chol_slab_scl}{Inverse gamma scale for slab sd in the cholesky factor}
-
-\item{chol_s1}{First shape of cholesky factor prior beta distribution}
-
-\item{chol_s2}{Second shape of cholesky factor prior beta distribution}
 
 \item{x}{Any object}
 

@@ -4,6 +4,8 @@
 #' 
 #' @param y Time series data of which columns indicate the variables
 #' @param p Lag of VAR (Default: 1)
+#' @param exogen Exogenous variables
+#' @param s Lag of exogeneous variables in VARX(p, s). By default, `s = 0`.
 #' @param include_mean Add constant term (Default: `TRUE`) or not (`FALSE`)
 #' @param method Method to solve linear equation system.
 #' (`nor`: normal equation (default), `chol`: Cholesky, and `qr`: HouseholderQR)
@@ -52,7 +54,7 @@
 #' head(fitted(fit))
 #' @order 1
 #' @export
-var_lm <- function(y, p = 1, include_mean = TRUE, method = c("nor", "chol", "qr")) {
+var_lm <- function(y, p = 1, exogen = NULL, s = 0, include_mean = TRUE, method = c("nor", "chol", "qr")) {
   if (!all(apply(y, 2, is.numeric))) {
     stop("Every column must be numeric class.")
   }
@@ -70,7 +72,42 @@ var_lm <- function(y, p = 1, include_mean = TRUE, method = c("nor", "chol", "qr"
     stop("'include_mean' is logical.")
   }
   name_lag <- concatenate_colnames(name_var, 1:p, include_mean)
-  res <- estimate_var(y, p, include_mean, method_fit)
+  if (!is.null(exogen)) {
+    if (!is.matrix(exogen)) {
+      exogen <- as.matrix(exogen)
+    }
+    if (!is.null(colnames(exogen))) {
+      name_exogen <- colnames(exogen)
+    } else {
+      name_exogen <- paste0("x", seq_len(ncol(exogen)))
+    }
+    # if (include_mean) {
+    #   # append name_lag before const
+    #   name_lag <- c(
+    #     name_lag[-length(name_lag)],
+    #     concatenate_colnames(name_exogen, 1:s, TRUE)
+    #   )
+    # } else {
+    #   name_lag <- c(
+    #     name_lag,
+    #     concatenate_colnames(name_exogen, 1:s, FALSE)
+    #   )
+    # }
+    res <- estimate_varx(y, exogen, p, s, include_mean, method_fit)
+    res$exogen_id <- length(name_lag) + 1:((s + 1) * ncol(exogen)) # row index for exogen in coefficient
+    name_lag <- c(
+      name_lag,
+      concatenate_colnames(name_exogen, 0:s, FALSE)
+    )
+    res$exogen_data <- exogen
+    res$s <- s
+    res$exogen_m <- ncol(exogen)
+    # res$exogen <- TRUE
+    # res$exogen_id <- p * ncol(y) + 1:(s * ncol(exogen)) # row index for exogen in coefficient
+  } else {
+    res <- estimate_var(y, p, include_mean, method_fit)
+    # res$exogen <- FALSE
+  }
   colnames(res$y) <- name_var
   colnames(res$y0) <- name_var
   colnames(res$design) <- name_lag

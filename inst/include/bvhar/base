@@ -1,0 +1,8 @@
+#ifndef BVHAR_BASE_H
+#define BVHAR_BASE_H
+
+#include "src/core/forecaster.h"
+#include "src/bayes/bayes.h"
+#include "src/bayes/forecaster.h"
+
+#endif // BVHAR_BASE_H

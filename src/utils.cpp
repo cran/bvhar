@@ -69,6 +69,12 @@ Eigen::MatrixXd build_design(Eigen::MatrixXd y, int var_lag, bool include_mean) 
 	return bvhar::build_x0(y, var_lag, include_mean);
 }
 
+//' @noRd
+// [[Rcpp::export]]
+Eigen::MatrixXd build_exogen_design(Eigen::MatrixXd y, Eigen::MatrixXd exogen, int var_lag, int exogen_lag, bool include_mean) {
+	return bvhar::build_x0(y, exogen, var_lag, exogen_lag, include_mean);
+}
+
 //' Building a Linear Transformation Matrix for Vector HAR
 //' 
 //' This function produces a linear transformation matrix for VHAR for given dimension.
@@ -405,7 +411,7 @@ Eigen::MatrixXd sim_var_eigen(int num_sim,
     for (int t = 1; t < var_lag; t++) {
       obs_p.block(0, t * dim, 1, dim) = obs_p.block(0, (t - 1) * dim, 1, dim);
     }
-    obs_p.block(0, 0, 1, dim) = res.row(i - 1);
+    obs_p.topLeftCorner(1, dim) = res.row(i - 1);
     res.row(i) = obs_p * var_coef + error_term.row(i); // yi = [y(i-1), ..., y(i-p), 1] A + eps(i)
   }
   return res.bottomRows(num_rand - num_burn);
@@ -461,7 +467,7 @@ Eigen::MatrixXd sim_var_chol(int num_sim,
     for (int t = 1; t < var_lag; t++) {
       obs_p.block(0, t * dim, 1, dim) = obs_p.block(0, (t - 1) * dim, 1, dim);
     }
-    obs_p.block(0, 0, 1, dim) = res.row(i - 1);
+    obs_p.topLeftCorner(1, dim) = res.row(i - 1);
     res.row(i) = obs_p * var_coef + error_term.row(i);
   }
   return res.bottomRows(num_rand - num_burn);
@@ -501,7 +507,7 @@ Eigen::MatrixXd sim_vhar_eigen(int num_sim,
     include_mean = false;
   } // 22m (none)
   int num_rand = num_sim + num_burn; // sim + burnin
-  Eigen::MatrixXd hartrans_mat = bvhar::build_vhar(dim, week, month, include_mean).block(0, 0, num_har, dim_har);
+  Eigen::MatrixXd hartrans_mat = bvhar::build_vhar(dim, week, month, include_mean).topLeftCorner(num_har, dim_har);
   Eigen::MatrixXd obs_p(1, dim_har); // row vector of X0: y22^T, ..., y1^T, 1
   obs_p(0, dim_har - 1) = 1.0; // for constant term if exists
   for (int i = 0; i < month; i++) {
@@ -527,7 +533,7 @@ Eigen::MatrixXd sim_vhar_eigen(int num_sim,
     for (int t = 1; t < month; t++) {
       obs_p.block(0, t * dim, 1, dim) = obs_p.block(0, (t - 1) * dim, 1, dim);
     }
-    obs_p.block(0, 0, 1, dim) = res.row(i - 1);
+    obs_p.topLeftCorner(1, dim) = res.row(i - 1);
     res.row(i) = obs_p * hartrans_mat.transpose() * vhar_coef + error_term.row(i);
   }
   return res.bottomRows(num_rand - num_burn);
@@ -575,7 +581,7 @@ Eigen::MatrixXd sim_vhar_chol(int num_sim,
     include_mean = false;
   } // 22m (none)
   int num_rand = num_sim + num_burn; // sim + burnin
-  Eigen::MatrixXd hartrans_mat = bvhar::build_vhar(dim, week, month, include_mean).block(0, 0, num_har, dim_har);
+  Eigen::MatrixXd hartrans_mat = bvhar::build_vhar(dim, week, month, include_mean).topLeftCorner(num_har, dim_har);
   Eigen::MatrixXd obs_p(1, dim_har); // row vector of X0: y22^T, ..., y1^T, 1
   obs_p(0, dim_har - 1) = 1.0; // for constant term if exists
   for (int i = 0; i < month; i++) {
@@ -601,7 +607,7 @@ Eigen::MatrixXd sim_vhar_chol(int num_sim,
     for (int t = 1; t < month; t++) {
       obs_p.block(0, t * dim, 1, dim) = obs_p.block(0, (t - 1) * dim, 1, dim);
     }
-    obs_p.block(0, 0, 1, dim) = res.row(i - 1);
+    obs_p.topLeftCorner(1, dim) = res.row(i - 1);
     res.row(i) = obs_p * hartrans_mat.transpose() * vhar_coef + error_term.row(i);
   }
   return res.bottomRows(num_rand - num_burn);
@@ -645,16 +651,17 @@ Eigen::MatrixXd VARtoVMA(Rcpp::List object, int lag_max) {
 
 //' @noRd
 // [[Rcpp::export]]
-Eigen::MatrixXd compute_var_mse(Eigen::MatrixXd cov_mat, Eigen::MatrixXd var_coef, int var_lag, int step) {
-  int dim = cov_mat.cols(); // dimension of time series
-  Eigen::MatrixXd vma_mat = bvhar::convert_var_to_vma(var_coef, var_lag, step);
-  Eigen::MatrixXd innov_account = Eigen::MatrixXd::Zero(dim, dim);
-  Eigen::MatrixXd mse = Eigen::MatrixXd::Zero(dim * step, dim);
-  for (int i = 0; i < step; i++) {
-    innov_account += vma_mat.block(i * dim, 0, dim, dim).transpose() * cov_mat * vma_mat.block(i * dim, 0, dim, dim);
-    mse.block(i * dim, 0, dim, dim) = innov_account;
-  }
-  return mse;
+Eigen::MatrixXd compute_var_mse_export(Eigen::MatrixXd cov_mat, Eigen::MatrixXd var_coef, int var_lag, int step) {
+  // int dim = cov_mat.cols(); // dimension of time series
+  // Eigen::MatrixXd vma_mat = bvhar::convert_var_to_vma(var_coef, var_lag, step);
+  // Eigen::MatrixXd innov_account = Eigen::MatrixXd::Zero(dim, dim);
+  // Eigen::MatrixXd mse = Eigen::MatrixXd::Zero(dim * step, dim);
+  // for (int i = 0; i < step; i++) {
+  //   innov_account += vma_mat.block(i * dim, 0, dim, dim).transpose() * cov_mat * vma_mat.block(i * dim, 0, dim, dim);
+  //   mse.block(i * dim, 0, dim, dim) = innov_account;
+  // }
+  // return mse;
+	return bvhar::compute_var_mse(cov_mat, var_coef, var_lag, step);
 }
 
 //' Compute Forecast MSE Matrices
@@ -678,7 +685,7 @@ Eigen::MatrixXd compute_covmse(Rcpp::List object, int step) {
   if (!object.inherits("varlse")) {
     Rcpp::stop("'object' must be varlse object.");
   }
-  return compute_var_mse(object["covmat"], object["coefficients"], object["p"], step);
+  return compute_var_mse_export(object["covmat"], object["coefficients"], object["p"], step);
 }
 
 //' Convert VAR to Orthogonalized VMA(infinite)
@@ -734,20 +741,12 @@ Eigen::MatrixXd VHARtoVMA(Rcpp::List object, int lag_max) {
 
 //' @noRd
 // [[Rcpp::export]]
-Eigen::MatrixXd compute_vhar_mse(Eigen::MatrixXd cov_mat,
-                                 Eigen::MatrixXd vhar_coef,
-                                 Eigen::MatrixXd har_trans,
-                                 int month,
-                                 int step) {
-  int dim = cov_mat.cols(); // dimension of time series
-  Eigen::MatrixXd vma_mat = bvhar::convert_vhar_to_vma(vhar_coef, har_trans, month, step);
-  Eigen::MatrixXd mse(dim * step, dim);
-  mse.block(0, 0, dim, dim) = cov_mat; // sig(y) = sig
-  for (int i = 1; i < step; i++) {
-    mse.block(i * dim, 0, dim, dim) = mse.block((i - 1) * dim, 0, dim, dim) + 
-      vma_mat.block(i * dim, 0, dim, dim).transpose() * cov_mat * vma_mat.block(i * dim, 0, dim, dim);
-  }
-  return mse;
+Eigen::MatrixXd compute_vhar_mse_export(Eigen::MatrixXd cov_mat,
+                                				Eigen::MatrixXd vhar_coef,
+                                				Eigen::MatrixXd har_trans,
+                                				int month,
+                                				int step) {
+	return bvhar::compute_vhar_mse(cov_mat, vhar_coef, har_trans, month, step);
 }
 
 //' Compute Forecast MSE Matrices for VHAR
@@ -771,7 +770,7 @@ Eigen::MatrixXd compute_covmse_har(Rcpp::List object, int step) {
   if (!object.inherits("vharlse")) {
     Rcpp::stop("'object' must be vharlse object.");
   }
-  return compute_vhar_mse(
+  return compute_vhar_mse_export(
     object["covmat"],
     object["coefficients"],
     object["HARtrans"],
@@ -894,15 +893,16 @@ Eigen::MatrixXd compute_stablemat(Eigen::MatrixXd x) {
 //' @references Lütkepohl, H. (2007). *New Introduction to Multiple Time Series Analysis*. Springer Publishing. doi:[10.1007/978-3-540-27752-1](https://doi.org/10.1007/978-3-540-27752-1)
 //' @noRd
 // [[Rcpp::export]]
-Eigen::MatrixXd compute_var_stablemat(Rcpp::List object) {
-  if (!object.inherits("varlse") && !object.inherits("bvarmn") && !object.inherits("bvarflat")) {
-    Rcpp::stop("'object' must be varlse object.");
-  }
-  int dim = object["m"]; // m
-  int var_lag = object["p"]; // p
-  Eigen::MatrixXd coef_mat = object["coefficients"]; // Ahat
-  Eigen::MatrixXd coef_without_const = coef_mat.block(0, 0, dim * var_lag, dim);
-  Eigen::MatrixXd res = compute_stablemat(coef_without_const);
+Eigen::MatrixXd compute_var_stablemat(Eigen::MatrixXd coef_mat, int var_lag) {
+  // if (!object.inherits("varlse") && !object.inherits("bvarmn") && !object.inherits("bvarflat")) {
+  //   Rcpp::stop("'object' must be varlse object.");
+  // }
+  // int dim = object["m"]; // m
+	int dim = coef_mat.cols();
+  // int var_lag = object["p"]; // p
+  // Eigen::MatrixXd coef_mat = object["coefficients"]; // Ahat
+  Eigen::MatrixXd coef_without_const = coef_mat.topLeftCorner(dim * var_lag, dim);
+  Eigen::MatrixXd res = bvhar::build_companion(coef_without_const);
   return res;
 }
 
@@ -918,16 +918,17 @@ Eigen::MatrixXd compute_var_stablemat(Rcpp::List object) {
 //' @references Lütkepohl, H. (2007). *New Introduction to Multiple Time Series Analysis*. Springer Publishing. doi:[10.1007/978-3-540-27752-1](https://doi.org/10.1007/978-3-540-27752-1)
 //' @noRd
 // [[Rcpp::export]]
-Eigen::MatrixXd compute_vhar_stablemat(Rcpp::List object) {
-  if (!object.inherits("vharlse") && !object.inherits("bvharmn")) {
-    Rcpp::stop("'object' must be varlse object.");
-  }
-  int dim = object["m"]; // m
-  Eigen::MatrixXd coef_mat = object["coefficients"]; // Phihat
-  Eigen::MatrixXd hartrans_mat = object["HARtrans"]; // HAR transformation: (3m + 1, 22m + 1)
-  Eigen::MatrixXd coef_without_const = coef_mat.block(0, 0, 3 * dim, dim);
-  Eigen::MatrixXd hartrans_without_const = hartrans_mat.block(0, 0, 3 * dim, 22 * dim); // 3m x 22m
-  Eigen::MatrixXd res = compute_stablemat(hartrans_without_const.transpose() * coef_without_const);
+Eigen::MatrixXd compute_vhar_stablemat(Eigen::MatrixXd coef_mat, Eigen::MatrixXd hartrans_mat) {
+  // if (!object.inherits("vharlse") && !object.inherits("bvharmn")) {
+  //   Rcpp::stop("'object' must be varlse object.");
+  // }
+  // int dim = object["m"]; // m
+	int dim = coef_mat.cols();
+  // Eigen::MatrixXd coef_mat = object["coefficients"]; // Phihat
+  // Eigen::MatrixXd hartrans_mat = object["HARtrans"]; // HAR transformation: (3m + 1, 22m + 1)
+  Eigen::MatrixXd coef_without_const = coef_mat.topLeftCorner(3 * dim, dim);
+  Eigen::MatrixXd hartrans_without_const = hartrans_mat.topLeftCorner(3 * dim, 22 * dim); // 3m x 22m
+  Eigen::MatrixXd res = bvhar::build_companion(hartrans_without_const.transpose() * coef_without_const);
   return res;
 }
 

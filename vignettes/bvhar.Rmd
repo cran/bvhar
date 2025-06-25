@@ -80,7 +80,7 @@ m <- ncol(etf)
 - T: Total number of observation
 - p: VAR lag
 - m: Dimension of variable
-- s = T - p
+- n = T - p
 - k = m * p + 1 if constant term, k = m * p without constant term
 
 # Models
@@ -143,7 +143,7 @@ Use `var_lm(y, p)` to model VAR(p).
 You can specify `type = "none"` to get model without constant term.
 
 ```{r varfit}
-(fit_var <- var_lm(etf_train, var_lag))
+(fit_var <- var_lm(y = etf_train, p = var_lag))
 ```
 
 The package provide `S3` object.
@@ -223,7 +223,7 @@ Use `vhar_lm(y)` to fit VHAR.
 You can specify `type = "none"` to get model without constant term.
 
 ```{r harfit}
-(fit_har <- vhar_lm(etf_train))
+(fit_har <- vhar_lm(y = etf_train))
 ```
 
 ```{r harlist}

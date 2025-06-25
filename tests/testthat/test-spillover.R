@@ -46,7 +46,7 @@ test_that("VAR-LDLT-Spillover", {
     p = 1,
     num_iter = 5,
     num_burn = 0,
-    bayes_spec = set_horseshoe(),
+    coef_spec = set_horseshoe(),
     cov_spec = set_ldlt(),
     include_mean = FALSE
   )
@@ -71,7 +71,7 @@ test_that("VHAR-LDLT-Spillover", {
     etf_vix[seq_len(num_row), seq_len(num_col)],
     num_iter = 5,
     num_burn = 0,
-    bayes_spec = set_horseshoe(),
+    coef_spec = set_horseshoe(),
     cov_spec = set_ldlt(),
     include_mean = FALSE
   )
@@ -97,7 +97,7 @@ test_that("VAR-SV-Spillover", {
     p = 1,
     num_iter = 5,
     num_burn = 0,
-    bayes_spec = set_horseshoe(),
+    coef_spec = set_horseshoe(),
     cov_spec = set_sv(),
     include_mean = FALSE
   )
@@ -119,7 +119,7 @@ test_that("VHAR-SV-Spillover", {
     har = har_lag,
     num_iter = 5,
     num_burn = 0,
-    bayes_spec = set_horseshoe(),
+    coef_spec = set_horseshoe(),
     cov_spec = set_sv(),
     include_mean = FALSE
   )

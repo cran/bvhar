@@ -6,10 +6,10 @@
 namespace bvhar {
 
 // Until updating cpp sources
-using SvVarForecaster = McmcVarForecaster<SvForecaster>;
-using SvVharForecaster = McmcVharForecaster<SvForecaster>;
-using SvVarSelectForecaster = McmcVarSelectForecaster<SvForecaster>;
-using SvVharSelectForecaster = McmcVharSelectForecaster<SvForecaster>;
+using SvVarForecaster = CtaVarForecaster<SvForecaster>;
+using SvVharForecaster = CtaVharForecaster<SvForecaster>;
+using SvVarSelectForecaster = CtaVarSelectForecaster<SvForecaster>;
+using SvVharSelectForecaster = CtaVharSelectForecaster<SvForecaster>;
 
 } // namespace bvhar
 
