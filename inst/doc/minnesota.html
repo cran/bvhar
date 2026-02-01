@@ -377,12 +377,12 @@ dim - 1\)</span> gives error. But we ignore <span class="math inline">\(\nu &gt;
 existence) in this function. Nonetheless, we recommend you to keep <span class="math inline">\(\nu &gt; dim + 1\)</span> condition. As mentioned,
 it guarantees the existence of the mean.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">sim_iw</span>(<span class="fu">diag</span>(<span class="dv">5</span>), <span class="dv">7</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt;         [,1]    [,2]    [,3]    [,4]    [,5]</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt; [1,]  0.1827  0.0894 -0.0411 -0.0924 -0.1305</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; [2,]  0.0894  0.6110  0.0860 -0.3754 -0.1015</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; [3,] -0.0411  0.0860  0.2189 -0.1649 -0.0988</span></span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; [4,] -0.0924 -0.3754 -0.1649  0.4577  0.2136</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; [5,] -0.1305 -0.1015 -0.0988  0.2136  0.7444</span></span></code></pre></div>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt;        [,1]   [,2]   [,3]   [,4]   [,5]</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt; [1,]  0.588  0.428  0.219  0.364 -0.562</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; [2,]  0.428  0.632  0.262  0.512 -0.517</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; [3,]  0.219  0.262  0.463  0.289 -0.551</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; [4,]  0.364  0.512  0.289  0.693 -0.565</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; [5,] -0.562 -0.517 -0.551 -0.565  1.084</span></span></code></pre></div>
 <p>In case of <code>sim_mniw()</code>, it returns list with
 <code>mn</code> (stacked MN matrices) and <code>iw</code> (stacked IW
 matrices). Each <code>mn</code> and <code>iw</code> has draw lists.</p>
@@ -390,35 +390,35 @@ matrices). Each <code>mn</code> and <code>iw</code> has draw lists.</p>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; $mn</span></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; $mn[[1]]</span></span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]  [,3] [,4] [,5]</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; [1,] 1.19 4.96  8.03 12.7 14.6</span></span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; [2,] 2.13 5.17 10.41 14.1 19.3</span></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; [3,] 3.01 7.15 10.29 14.9 18.1</span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; [4,] 4.59 7.99 12.12 15.0 18.5</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; [1,] 2.33 5.71  8.22 13.1 16.1</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; [2,] 2.10 4.59 11.37 13.2 18.9</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; [3,] 3.26 6.57 11.36 14.0 16.9</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; [4,] 4.16 7.73 12.02 15.9 19.5</span></span>
 <span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; $mn[[2]]</span></span>
 <span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt;       [,1] [,2]  [,3] [,4] [,5]</span></span>
-<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; [1,] 0.323 5.07  8.24 13.1 17.4</span></span>
-<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; [2,] 2.022 5.56  9.96 13.9 19.4</span></span>
-<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; [3,] 3.380 7.24 11.34 15.5 17.9</span></span>
-<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; [4,] 3.755 8.79 11.84 15.6 19.6</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; [1,] 0.434 4.50  9.01 12.7 16.8</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; [2,] 1.100 6.54  9.89 14.7 18.5</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; [3,] 3.899 6.80 11.44 14.8 18.6</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; [4,] 5.415 6.89 11.75 16.3 19.5</span></span>
 <span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; $iw</span></span>
 <span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; $iw[[1]]</span></span>
-<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt;         [,1]     [,2]     [,3]    [,4]   [,5]</span></span>
-<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; [1,]  0.2887 -0.04393  0.11892 -0.2959  0.110</span></span>
-<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; [2,] -0.0439  0.33357  0.00197  0.0106 -0.167</span></span>
-<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; [3,]  0.1189  0.00197  1.30074 -0.0291  2.210</span></span>
-<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; [4,] -0.2959  0.01061 -0.02913  0.5072  0.250</span></span>
-<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt; [5,]  0.1104 -0.16736  2.20957  0.2504  4.623</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt;         [,1]   [,2]    [,3]    [,4]    [,5]</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; [1,]  0.3060  0.171 -0.2698  0.0521 -0.0726</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; [2,]  0.1711  0.755 -0.4490  0.3805  0.1666</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; [3,] -0.2698 -0.449  0.6684 -0.2751 -0.0972</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; [4,]  0.0521  0.381 -0.2751  0.6968  0.8058</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt; [5,] -0.0726  0.167 -0.0972  0.8058  1.4994</span></span>
 <span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt; $iw[[2]]</span></span>
-<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt;          [,1]    [,2]     [,3]    [,4]   [,5]</span></span>
-<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt; [1,]  0.28118 -0.1397  0.00529  0.0283  0.038</span></span>
-<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt; [2,] -0.13965  0.2876  0.06156 -0.1575 -0.186</span></span>
-<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#&gt; [3,]  0.00529  0.0616  0.31282 -0.1372 -0.299</span></span>
-<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt; [4,]  0.02831 -0.1575 -0.13724  0.3441  0.122</span></span>
-<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt; [5,]  0.03803 -0.1856 -0.29860  0.1217  0.738</span></span></code></pre></div>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt;        [,1]    [,2]    [,3]    [,4]    [,5]</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt; [1,]  0.976 -0.4780 -0.1529  0.2778 -0.1651</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt; [2,] -0.478  0.6363  0.0262 -0.2094  0.2551</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#&gt; [3,] -0.153  0.0262  0.1619 -0.0537 -0.0292</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt; [4,]  0.278 -0.2094 -0.0537  0.3866 -0.0893</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt; [5,] -0.165  0.2551 -0.0292 -0.0893  0.3105</span></span></code></pre></div>
 <!-- Since each matrix is stacked rowwise, it is actually not that readable and practical. -->
 <p>This function has been defined for the next simulation functions.</p>
 </div>
@@ -510,34 +510,34 @@ both <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sig
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>(<span class="fu">sim_mncoef</span>(bvar_lag, spec_to_sim))</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt; $coefficients</span></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt;            [,1]     [,2]      [,3]     [,4]</span></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt;  [1,]  0.996255 -0.19084 -0.026363  0.07600</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt;  [2,] -0.017158  1.07873 -0.033404 -0.00816</span></span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt;  [3,] -0.225869  0.31165  0.927705 -0.48148</span></span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt;  [4,] -0.002706 -0.26068  0.038566  0.84105</span></span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt;  [5,] -0.023064 -0.11717 -0.030881  0.35496</span></span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt;  [6,]  0.000253 -0.05523 -0.018351  0.03580</span></span>
-<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt;  [7,] -0.001364 -0.06563 -0.051615 -0.33330</span></span>
-<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt;  [8,] -0.025569  0.11938 -0.011720 -0.15248</span></span>
-<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt;  [9,]  0.062006 -0.07985 -0.001830  0.15440</span></span>
-<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt; [10,]  0.008609 -0.03437  0.016242  0.00866</span></span>
-<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt; [11,] -0.069804  0.11559  0.003275  0.30043</span></span>
-<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt; [12,]  0.001677  0.01789 -0.000582 -0.02224</span></span>
-<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; [13,] -0.000864  0.05893  0.038960  0.06788</span></span>
-<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#&gt; [14,]  0.008799 -0.04337  0.005557  0.02273</span></span>
-<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co">#&gt; [15,] -0.053924  0.16120 -0.006870  0.10085</span></span>
-<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="co">#&gt; [16,] -0.009109  0.00284 -0.008880 -0.01168</span></span>
-<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co">#&gt; [17,]  0.008001 -0.05816  0.012293 -0.05256</span></span>
-<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="co">#&gt; [18,] -0.006107  0.03645 -0.004491 -0.00687</span></span>
-<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="co">#&gt; [19,] -0.011204  0.05703  0.036651  0.13185</span></span>
-<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a><span class="co">#&gt; [20,] -0.003148 -0.05735  0.016794  0.04086</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt;           [,1]     [,2]      [,3]    [,4]</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt;  [1,]  0.94670  0.04018 -0.015784  0.2745</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt;  [2,] -0.07307  1.05811  0.004270  0.1084</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt;  [3,] -0.12827 -0.36258  1.047951 -0.3413</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt;  [4,]  0.09243 -0.35626 -0.068964  0.8931</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt;  [5,] -0.06170  0.45019  0.040800 -0.3748</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt;  [6,] -0.03948  0.03861  0.019841  0.0436</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt;  [7,] -0.11283 -0.42310 -0.012247  0.7918</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt;  [8,] -0.02440 -0.13014  0.041177  0.1533</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt;  [9,] -0.01307  0.14998  0.031109 -0.1510</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt; [10,]  0.03539 -0.02044 -0.027690 -0.0599</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt; [11,]  0.01680  0.46625  0.006200 -0.2890</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt; [12,] -0.00202 -0.02148  0.000093  0.0578</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; [13,]  0.08527  0.08206 -0.017698 -0.3457</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#&gt; [14,]  0.01184  0.00329 -0.013434 -0.0112</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co">#&gt; [15,] -0.00964  0.22695 -0.010620 -0.1717</span></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="co">#&gt; [16,] -0.01819 -0.00357  0.012219  0.0124</span></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co">#&gt; [17,]  0.02730 -0.10795 -0.030850  0.1132</span></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="co">#&gt; [18,] -0.00978  0.01280  0.003423  0.0204</span></span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="co">#&gt; [19,]  0.08201  0.17083 -0.042995 -0.4951</span></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a><span class="co">#&gt; [20,]  0.03924  0.01520 -0.014961 -0.0968</span></span>
 <span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a><span class="co">#&gt; $covmat</span></span>
-<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a><span class="co">#&gt;        [,1]     [,2]    [,3]   [,4]</span></span>
-<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a><span class="co">#&gt; [1,]  2.615  -5.1044  0.1522   2.44</span></span>
-<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a><span class="co">#&gt; [2,] -5.104  32.2768 -0.0549 -12.04</span></span>
-<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a><span class="co">#&gt; [3,]  0.152  -0.0549  1.4573   0.31</span></span>
-<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a><span class="co">#&gt; [4,]  2.440 -12.0446  0.3101  30.83</span></span></code></pre></div>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a><span class="co">#&gt;        [,1]   [,2]  [,3]   [,4]</span></span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a><span class="co">#&gt; [1,]   7.13  -2.04 -3.51 -13.83</span></span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a><span class="co">#&gt; [2,]  -2.04  45.95  2.03 -27.17</span></span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a><span class="co">#&gt; [3,]  -3.51   2.03  3.13   5.27</span></span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a><span class="co">#&gt; [4,] -13.83 -27.17  5.27  73.48</span></span></code></pre></div>
 </div>
 <div id="bvhar" class="section level2">
 <h2>BVHAR</h2>
@@ -586,18 +586,18 @@ model setting:</p>
 <span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co">#&gt; [1]  FALSE</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>(<span class="fu">sim_mnvhar_coef</span>(bvhar_var_spec))</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt; $coefficients</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt;          [,1]    [,2]</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; [1,]  0.30349 -0.2954</span></span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; [2,] -0.01177  1.2277</span></span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; [3,]  0.05543 -0.2689</span></span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; [4,]  0.00235  0.0574</span></span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; [5,] -0.05121  0.1928</span></span>
-<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; [6,] -0.00891  0.0245</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt;         [,1]      [,2]</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; [1,]  0.2549 -0.265804</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; [2,]  0.0581  1.158779</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; [3,] -0.0174 -0.121060</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; [4,]  0.0189  0.000728</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; [5,] -0.0651 -0.009972</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; [6,] -0.0124 -0.013118</span></span>
 <span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; $covmat</span></span>
-<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt;        [,1]   [,2]</span></span>
-<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt; [1,]  0.322 -0.407</span></span>
-<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt; [2,] -0.407  3.195</span></span></code></pre></div>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt;       [,1]  [,2]</span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt; [1,] 0.457 0.071</span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt; [2,] 0.071 1.295</span></span></code></pre></div>
 </div>
 <div id="bvhar-l" class="section level3">
 <h3>BVHAR-L</h3>
@@ -638,17 +638,17 @@ model setting:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>(<span class="fu">sim_mnvhar_coef</span>(bvhar_vhar_spec))</span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="co">#&gt; $coefficients</span></span>
 <span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co">#&gt;          [,1]    [,2]</span></span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">#&gt; [1,]  0.38047  0.2058</span></span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt; [2,]  0.14585  0.5599</span></span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt; [3,]  0.09613 -0.0491</span></span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#&gt; [4,]  0.05043  0.0088</span></span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="co">#&gt; [5,]  0.05409  0.3732</span></span>
-<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt; [6,] -0.00569 -0.0482</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">#&gt; [1,]  0.56613  0.1127</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt; [2,] -0.17248  0.4087</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt; [3,] -0.00739  0.0752</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#&gt; [4,] -0.00522  0.1394</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="co">#&gt; [5,]  0.09602 -0.1269</span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt; [6,]  0.06397  0.0498</span></span>
 <span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co">#&gt; $covmat</span></span>
-<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt;       [,1]   [,2]</span></span>
-<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co">#&gt; [1,] 0.566  0.263</span></span>
-<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt; [2,] 0.263 14.995</span></span></code></pre></div>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]</span></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co">#&gt; [1,] 4.05 1.06</span></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt; [2,] 1.06 5.00</span></span></code></pre></div>
 </div>
 </div>
 </div>
